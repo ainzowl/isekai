@@ -1,10 +1,10 @@
 // node examples/09-offline-mock-fetch.mjs
 //
 // Zero network, zero keys: the same client, a mocked fetch.
-// This is also how you test *your* code that uses shogo — import
-// `mockFetch` from `shogo-anime/testing` and hand it to the constructor.
+// This is also how you test *your* code that uses isekai — import
+// `mockFetch` from `@ainzoal/isekai/testing` and hand it to the constructor.
 
-import { Shogo } from "../src/index.js";
+import { Isekai } from "../src/index.js";
 import { mockFetch } from "../src/testing.js";
 import { section, line, note } from "./_shared.mjs";
 
@@ -87,12 +87,12 @@ const fetchImpl = mockFetch([
   },
 ]);
 
-const shogo = new Shogo({ fetch: fetchImpl });
+const isekai = new Isekai({ fetch: fetchImpl });
 
 section("findById('mal:21') with a mocked network");
-const anime = await shogo.findById("mal:21");
+const anime = await isekai.findById("mal:21");
 line("title", anime.titles.romaji);
-line("shogo id", anime.ids.shogo);
+line("isekai id", anime.ids.isekai);
 line("ids", JSON.stringify(anime.ids));
 line("episodes", anime.episodes);
 line("sources", anime.sources.join(", "));
@@ -105,4 +105,4 @@ for (const call of fetchImpl.calls) {
 }
 
 note("same shapes, same merge rules, same errors — no network involved");
-note("use this in your own test suite: import { mockFetch } from 'shogo-anime/testing'");
+note("use this in your own test suite: import { mockFetch } from '@ainzoal/isekai/testing'");

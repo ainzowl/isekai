@@ -1,7 +1,7 @@
 // findById/findByIds: resolve any id (inline, packed, slug), fan out to the
 // planned providers, merge into one canonical Anime.
 
-import { formatId, idsKey, toShogo } from "../core/ids.js";
+import { formatId, idsKey, toIsekai } from "../core/ids.js";
 import { mergeAnime } from "../core/merge.js";
 import { NotFoundError } from "../core/errors.js";
 import { TTL } from "../core/cache.js";
@@ -9,10 +9,10 @@ import { METADATA_PROVIDERS } from "../providers/index.js";
 import { nativeRefFor, resolveIds } from "./map.js";
 import { applySelectors, mapLimit, metaOf, pickError, planProviders } from "./common.js";
 
-function shogoOf(ids) {
+function isekaiOf(ids) {
   try {
     if (ids.mal == null && ids.anilist == null && ids.kitsu == null) return null;
-    return toShogo({ mal: ids.mal, anilist: ids.anilist, kitsu: ids.kitsu });
+    return toIsekai({ mal: ids.mal, anilist: ids.anilist, kitsu: ids.kitsu });
   } catch (err) {
     return null;
   }
@@ -130,8 +130,8 @@ export async function findById(client, ref, opts = {}) {
     providers: client.config.mergeProviders,
     defaultSource: client.config.defaultSource,
   });
-  const shogo = shogoOf(merged.ids);
-  if (shogo) merged.ids.shogo = shogo;
+  const isekai = isekaiOf(merged.ids);
+  if (isekai) merged.ids.isekai = isekai;
 
   const result = Object.assign(merged, {
     errors,

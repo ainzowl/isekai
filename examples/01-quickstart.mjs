@@ -4,16 +4,16 @@
 // Keyless — no API keys needed (Jikan + AniList + Kitsu + animap.id).
 //
 // If api.jikan.moe is unreachable from your network:
-//   SHOGO_PROVIDERS=anilist,kitsu,animap node examples/01-quickstart.mjs
+//   ISEKAI_PROVIDERS=anilist,kitsu,animap node examples/01-quickstart.mjs
 
-import { makeShogo, section, line, note } from "./_shared.mjs";
+import { makeIsekai, section, line, note } from "./_shared.mjs";
 
-const shogo = makeShogo();
+const isekai = makeIsekai();
 
 section("findById('mal:21')");
-const anime = await shogo.findById("mal:21");
+const anime = await isekai.findById("mal:21");
 line("title", anime.titles.romaji);
-line("shogo id", anime.ids.shogo);
+line("isekai id", anime.ids.isekai);
 line("ids", JSON.stringify(anime.ids));
 line("episodes", anime.episodes);
 line("sources", anime.sources.join(", "));
@@ -22,19 +22,19 @@ line("synopsis", (anime.synopsis || "").slice(0, 90) + "...");
 line("errors", anime.errors.length ? JSON.stringify(anime.errors) : "none");
 
 section("the same record, reachable five more ways");
-const byShogoId = await shogo.findById(anime.ids.shogo); // packed id (string!)
-line("shogo id", byShogoId.titles.romaji);
-const bySlug = await shogo.findById(anime.slug); // bare text is a slug
+const byIsekaiId = await isekai.findById(anime.ids.isekai); // packed id (string!)
+line("isekai id", byIsekaiId.titles.romaji);
+const bySlug = await isekai.findById(anime.slug); // bare text is a slug
 line("slug", bySlug.titles.romaji + "  (" + anime.slug + ")");
-const byStructured = await shogo.findById({ anilist: anime.ids.anilist });
+const byStructured = await isekai.findById({ anilist: anime.ids.anilist });
 line("{ anilist }", byStructured.titles.romaji);
 
-section("bare numbers that are not shogo ids fail loudly");
+section("bare numbers that are not isekai ids fail loudly");
 try {
-  await shogo.findById(21);
+  await isekai.findById(21);
 } catch (err) {
   line(err.code, err.message);
 }
 
-note("store ids.shogo as a STRING: populated ids exceed Number.MAX_SAFE_INTEGER");
+note("store ids.isekai as a STRING: populated ids exceed Number.MAX_SAFE_INTEGER");
 note("the whole shape is documented in README.md ('The one shape')");

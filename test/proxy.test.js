@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import { createServer } from "node:http";
 
 import { createDocsServer } from "../docs/serve.mjs";
-import { Shogo } from "../src/index.js";
+import { Isekai } from "../src/index.js";
 
 function listen(server) {
   return new Promise((resolve) => server.listen(0, "127.0.0.1", () => resolve(server.address().port)));
@@ -48,7 +48,7 @@ test("backend mode routes every provider call through the proxy", async () => {
   const docsPort = await listen(docs);
   const proxyUrl = "http://127.0.0.1:" + docsPort + "/api/proxy";
 
-  const client = new Shogo({
+  const client = new Isekai({
     proxy: proxyUrl,
     providers: ["kitsu", "anilist"],
     baseUrls: { kitsu: "http://127.0.0.1:" + upstreamPort, anilist: "http://127.0.0.1:" + upstreamPort },
@@ -79,7 +79,7 @@ test("backend mode routes every provider call through the proxy", async () => {
 });
 
 test("frontend mode is the default transport", () => {
-  const client = new Shogo({ fetch: () => Promise.reject(new Error("nope")) });
+  const client = new Isekai({ fetch: () => Promise.reject(new Error("nope")) });
   assert.equal(client.transport, "frontend");
   assert.equal(client.config.proxy, null);
 });

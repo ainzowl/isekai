@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Live playground — shogo</title>
+  <title>Live playground — isekai</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌀</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Overpass:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -46,13 +46,13 @@
       <span class="grid h-7 w-7 place-items-center rounded-lg bg-brand/15 text-brand ring-1 ring-brand/30">
         <i data-lucide="orbit" class="h-4 w-4"></i>
       </span>
-      shogo <span class="text-slate-500">playground</span>
+      isekai <span class="text-slate-500">playground</span>
     </a>
     <div class="flex items-center gap-2 text-sm">
       <a class="rounded-lg px-3 py-1.5 hover:bg-ink-800 hover:text-white" href="../documentation/">
         <i data-lucide="book-open" class="mr-1 inline h-3.5 w-3.5 text-brand"></i> docs
       </a>
-      <a class="rounded-lg bg-brand px-3 py-1.5 font-medium text-ink-950 hover:bg-brand-dark" href="../shogo/shogo.html">
+      <a class="rounded-lg bg-brand px-3 py-1.5 font-medium text-ink-950 hover:bg-brand-dark" href="../isekai/isekai.html">
         open the app
       </a>
     </div>
@@ -93,7 +93,7 @@
     <p class="mt-3 text-xs text-slate-500">
       Real calls to the live APIs from your browser (CORS is open for all keyless providers).
       Keys are kept in <code class="text-sky-300">localStorage</code> and never leave your machine.
-      The editor gets <code class="text-sky-300">shogo</code> (a configured client), <code class="text-sky-300">ids</code> (pure helpers) and <code class="text-sky-300">log()</code>.
+      The editor gets <code class="text-sky-300">isekai</code> (a configured client), <code class="text-sky-300">ids</code> (pure helpers) and <code class="text-sky-300">log()</code>.
       With <strong>backend proxy</strong> checked, every call goes through <code class="text-sky-300">/api/proxy</code> on the
       docs server instead of this browser — run it with <code class="text-sky-300">node docs/serve.mjs</code>.
     </p>
@@ -144,7 +144,7 @@
 </main>
 
 <script type="module">
-  import { Shogo, ids } from "../../src/index.js";
+  import { Isekai, ids } from "../../src/index.js";
   import { mockFetch } from "../../src/testing.js";
 
   // ------------------------------------------------------------------ snippets
@@ -153,9 +153,9 @@
       title: "findById — one merged record",
       code: [
         "// Fans out to Jikan + AniList + Kitsu + animap and merges everything.",
-        "const anime = await shogo.findById(\"mal:21\");",
+        "const anime = await isekai.findById(\"mal:21\");",
         "log(\"title:\", anime.titles.romaji);",
-        "log(\"shogo id:\", anime.ids.shogo);",
+        "log(\"isekai id:\", anime.ids.isekai);",
         "log(\"sources:\", anime.sources.join(\", \"));",
         "return anime;",
       ].join("\n"),
@@ -163,10 +163,10 @@
     search: {
       title: "search + identify — which anime is this name?",
       code: [
-        "const found = await shogo.search(\"bocchi the rock\", { limit: 5 });",
+        "const found = await isekai.search(\"bocchi the rock\", { limit: 5 });",
         "log(\"results:\", found.results.length, \"| provider errors:\", found.errors.length);",
         "",
-        "const guess = await shogo.identify(\"bocchi the rock\", { hint: { year: 2022 } });",
+        "const guess = await isekai.identify(\"bocchi the rock\", { hint: { year: 2022 } });",
         "log(\"best:\", guess.best && guess.best.titles.romaji, \"confidence:\", guess.best && guess.best.confidence);",
         "log(\"why:\", guess.best && guess.best.reasons.join(\"; \"));",
         "",
@@ -179,7 +179,7 @@
     episode: {
       title: "episode context — anime + episode + skip + stills",
       code: [
-        "const ctx = await shogo.episode(\"mal:21\", { season: 1, number: 1 });",
+        "const ctx = await isekai.episode(\"mal:21\", { season: 1, number: 1 });",
         "log(\"anime:\", ctx.anime.titles.romaji);",
         "log(\"episode:\", \"#\" + ctx.episode.number, ctx.episode.title);",
         "log(\"skip:\", ctx.skip ? JSON.stringify(ctx.skip.op) : \"null — add an Anime Skip key above\");",
@@ -190,20 +190,20 @@
       title: "packed IDs & slugs (no network)",
       code: [
         "// Pure math — runs instantly, no requests at all.",
-        "log(\"packed:\", ids.toShogo({ mal: 21, anilist: 21, kitsu: 12 }));",
-        "log(\"decoded:\", JSON.stringify(ids.fromShogo(\"2105\")));",
-        "log(\"typo ->\", ids.fromShogo(\"2106\"));",
+        "log(\"packed:\", ids.toIsekai({ mal: 21, anilist: 21, kitsu: 12 }));",
+        "log(\"decoded:\", JSON.stringify(ids.fromIsekai(\"2105\")));",
+        "log(\"typo ->\", ids.fromIsekai(\"2106\"));",
         "log(\"slug:\", ids.slugify(\"Bocchi the Rock!\"));",
         "return {",
         "  equivalent: ids.equivalent(\"2105\", \"12000000210000002117\"),",
-        "  merged: ids.mergeShogo(\"2105\", \"12000000210000002117\"),",
+        "  merged: ids.mergeIsekai(\"2105\", \"12000000210000002117\"),",
         "};",
       ].join("\n"),
     },
     mapping: {
       title: "mapping — resolve any id to any id",
       code: [
-        "const resolved = await shogo.resolve(\"mal:21\", { to: [\"anilist\", \"kitsu\", \"anidb\"] });",
+        "const resolved = await isekai.resolve(\"mal:21\", { to: [\"anilist\", \"kitsu\", \"anidb\"] });",
         "log(\"via:\", resolved.sources.join(\", \"));",
         "log(\"missing:\", JSON.stringify(resolved.missing));",
         "return resolved;",
@@ -212,7 +212,7 @@
     raw: {
       title: "raw.anilist — full provider power",
       code: [
-        "const media = await shogo.raw.anilist(",
+        "const media = await isekai.raw.anilist(",
         "  \"query { Media(idMal: 21) { id idMal title { romaji english } episodes } }\"",
         ");",
         "log(\"title:\", media.Media.title.romaji);",
@@ -222,11 +222,11 @@
     introspection: {
       title: "providers & stats introspection",
       code: [
-        "log(\"configured:\", shogo.providers.configured().join(\", \"));",
-        "log(\"anilist capabilities:\", JSON.stringify(shogo.providers.capabilities(\"anilist\")));",
-        "const anime = await shogo.findById(\"mal:21\");",
+        "log(\"configured:\", isekai.providers.configured().join(\", \"));",
+        "log(\"anilist capabilities:\", JSON.stringify(isekai.providers.capabilities(\"anilist\")));",
+        "const anime = await isekai.findById(\"mal:21\");",
         "log(\"after one lookup, http stats:\");",
-        "return { http: shogo.stats().http, meta: anime.meta };",
+        "return { http: isekai.stats().http, meta: anime.meta };",
       ].join("\n"),
     },
     offline: {
@@ -239,7 +239,7 @@
         "  { url: (u) => u.includes(\"kitsu.io/api/edge/anime/12/mappings\"), reply: { body: { data: [] } } },",
         "  { url: (u) => u.includes(\"kitsu.io/api/edge/anime/12\"), reply: { body: { data: { id: \"12\", type: \"anime\", attributes: { slug: \"one-piece\", canonicalTitle: \"One Piece\", subtype: \"TV\" } } } } },",
         "]);",
-        "const mocked = new Shogo({ fetch: fetchImpl, providers: [\"jikan\", \"kitsu\", \"animap\"] });",
+        "const mocked = new Isekai({ fetch: fetchImpl, providers: [\"jikan\", \"kitsu\", \"animap\"] });",
         "const anime = await mocked.findById(\"mal:21\");",
         "log(\"fetches served by the mock:\", fetchImpl.calls.length);",
         "return anime;",
@@ -250,9 +250,9 @@
   // ------------------------------------------------------------------ settings
   const $ = (id) => document.getElementById(id);
   const stored = {
-    providers: JSON.parse(localStorage.getItem("shogo.providers") || "null"),
-    tmdb: localStorage.getItem("shogo.tmdb") || "",
-    skip: localStorage.getItem("shogo.skip") || "",
+    providers: JSON.parse(localStorage.getItem("isekai.providers") || "null"),
+    tmdb: localStorage.getItem("isekai.tmdb") || "",
+    skip: localStorage.getItem("isekai.skip") || "",
   };
   const ALL_PROVIDERS = ["jikan", "kitsu", "anilist", "animap", "tmdb", "anime-skip"];
   const selected = new Set(stored.providers || ["jikan", "kitsu", "anilist", "animap"]);
@@ -274,16 +274,16 @@
   }
   $("key-tmdb").value = stored.tmdb;
   $("key-skip").value = stored.skip;
-  $("mode-backend").checked = localStorage.getItem("shogo.mode") === "backend";
+  $("mode-backend").checked = localStorage.getItem("isekai.mode") === "backend";
   $("mode-backend").addEventListener("change", () => {
-    localStorage.setItem("shogo.mode", $("mode-backend").checked ? "backend" : "frontend");
+    localStorage.setItem("isekai.mode", $("mode-backend").checked ? "backend" : "frontend");
   });
   $("key-tmdb").addEventListener("change", persist);
   $("key-skip").addEventListener("change", persist);
   function persist() {
-    localStorage.setItem("shogo.providers", JSON.stringify([...selected]));
-    localStorage.setItem("shogo.tmdb", $("key-tmdb").value.trim());
-    localStorage.setItem("shogo.skip", $("key-skip").value.trim());
+    localStorage.setItem("isekai.providers", JSON.stringify([...selected]));
+    localStorage.setItem("isekai.tmdb", $("key-tmdb").value.trim());
+    localStorage.setItem("isekai.skip", $("key-skip").value.trim());
   }
 
   // ------------------------------------------------------------------ snippets UI
@@ -363,11 +363,11 @@
       timeoutMs: 12000,
     };
     if ($("mode-backend").checked) options.proxy = "/api/proxy";
-    const client = new Shogo(options);
+    const client = new Isekai(options);
 
     try {
-      const fn = new AsyncFunction("shogo", "Shogo", "ids", "mockFetch", "log", editor.value);
-      const result = await fn(client, Shogo, ids, mockFetch, (...args) => logLine(args));
+      const fn = new AsyncFunction("isekai", "Isekai", "ids", "mockFetch", "log", editor.value);
+      const result = await fn(client, Isekai, ids, mockFetch, (...args) => logLine(args));
       if (result !== undefined) {
         print('<span class="text-slate-500">// return value</span>');
         print(renderJson(result, ""));

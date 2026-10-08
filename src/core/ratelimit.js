@@ -71,7 +71,7 @@ export function createLimiter(options) {
 
 function sleepAbortable(ms, signal, clock) {
   if (!clock.hasSleep) {
-    throw new Error("clock.sleep is required for rate limiting; pass one via new Shogo({ clock })");
+    throw new Error("clock.sleep is required for rate limiting; pass one via new Isekai({ clock })");
   }
   if (!signal) return clock.sleep(ms);
   if (signal.aborted) return Promise.reject(abortError());

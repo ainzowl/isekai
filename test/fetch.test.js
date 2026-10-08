@@ -17,7 +17,7 @@ function makeHttp(overrides = {}) {
       clock,
       cache: overrides.cache === undefined ? createMemoryCache(clock.now) : overrides.cache,
       hooks: overrides.hooks || {},
-      userAgent: "shogo-test",
+      userAgent: "isekai-test",
       timeoutMs: 1000,
       retries: overrides.retries != null ? overrides.retries : 1,
       breakers: overrides.breakers || {},

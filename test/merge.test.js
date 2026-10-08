@@ -90,7 +90,7 @@ test("merge: falls back to a derived slug when no native slug exists", () => {
   assert.equal(anime.slug, "cowboy-bebop");
 });
 
-test("merge: shogo score averages provider scores (normalized to 10)", () => {
+test("merge: isekai score averages provider scores (normalized to 10)", () => {
   const anime = mergeAnime(partials());
   // anilist 8.7 (scale 10) and kitsu 82.4 (scale 100 -> 8.24)
   assert.equal(anime.score.providers, 2);
@@ -99,7 +99,7 @@ test("merge: shogo score averages provider scores (normalized to 10)", () => {
   assert.equal(anime.score.scale, 10);
 });
 
-test("merge: shogo score is null when nothing is scored", () => {
+test("merge: isekai score is null when nothing is scored", () => {
   const anime = mergeAnime([{ provider: "jikan", data: { ids: { mal: 1 }, titles: { romaji: "Cowboy Bebop" } } }]);
   assert.equal(anime.score, null);
 });

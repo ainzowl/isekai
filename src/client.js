@@ -1,4 +1,4 @@
-// The Shogo client: configuration, wiring, delegation and introspection.
+// The Isekai client: configuration, wiring, delegation and introspection.
 
 import { VERSION } from "./version.js";
 import { resolveClock } from "./core/time.js";
@@ -22,7 +22,7 @@ import { skipTimes } from "./methods/skips.js";
 import { relations, franchise, recommendations, schedule, people } from "./methods/relations.js";
 import { catalog } from "./methods/catalog.js";
 
-export class Shogo {
+export class Isekai {
   constructor(options = {}) {
     this.version = VERSION;
     const keys = options.keys || {};
@@ -35,7 +35,7 @@ export class Shogo {
       mergeProviders: options.mergeProviders || null,
       mergeDefaults: options.mergeDefaults || null,
       identifyThreshold: options.identify && options.identify.threshold != null ? options.identify.threshold : 0.6,
-      userAgent: options.userAgent || "shogo/" + VERSION + " (+https://github.com/shogo)",
+      userAgent: options.userAgent || "isekai/" + VERSION + " (+https://github.com/isekai)",
       timeoutMs: options.timeoutMs != null ? options.timeoutMs : 10000,
       retries: options.retries,
       breaker: options.breaker || null,
@@ -84,11 +84,11 @@ export class Shogo {
 
     this.parseId = idTools.parseId;
     this.ids = {
-      toShogo: idTools.toShogo,
-      fromShogo: idTools.fromShogo,
-      isShogoId: idTools.isShogoId,
+      toIsekai: idTools.toIsekai,
+      fromIsekai: idTools.fromIsekai,
+      isIsekaiId: idTools.isIsekaiId,
       slugify: idTools.slugify,
-      merge: idTools.mergeShogo,
+      merge: idTools.mergeIsekai,
       equivalent: idTools.equivalent,
       parseId: idTools.parseId,
       formatId: idTools.formatId,
@@ -257,8 +257,8 @@ export class Shogo {
   }
 }
 
-export function createShogo(options) {
-  return new Shogo(options);
+export function createIsekai(options) {
+  return new Isekai(options);
 }
 
-export default Shogo;
+export default Isekai;

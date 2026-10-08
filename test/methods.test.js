@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
-import { Shogo } from "../src/index.js";
+import { Isekai } from "../src/index.js";
 import { InvalidIdError } from "../src/core/errors.js";
 import { mockFetch } from "../src/testing.js";
 
@@ -328,7 +328,7 @@ const FAST_RATES = {
 
 function makeClient(keys = {}, extra = {}) {
   const fetchImpl = mockFetch(routes());
-  const client = new Shogo(Object.assign({ fetch: fetchImpl, keys, rateLimits: FAST_RATES }, extra));
+  const client = new Isekai(Object.assign({ fetch: fetchImpl, keys, rateLimits: FAST_RATES }, extra));
   return { client, fetchImpl };
 }
 
@@ -368,7 +368,7 @@ test("episode() explains why skip times are missing", async () => {
         }
       : route
   );
-  const nothing = new Shogo({ fetch: mockFetch(noSkips), rateLimits: FAST_RATES });
+  const nothing = new Isekai({ fetch: mockFetch(noSkips), rateLimits: FAST_RATES });
   const first = await nothing.episode("mal:21", { number: 1, providers: ["kitsu"] });
   assert.equal(first.skip, null);
   assert.ok(first.skipped.some((entry) => entry.provider === "aniskip" && entry.reason === "not-found"));
@@ -384,13 +384,13 @@ test("episode() explains why skip times are missing", async () => {
         }
       : route
   );
-  const rejectedClient = new Shogo({ fetch: mockFetch(rejected), keys: { "anime-skip": "bogus" }, rateLimits: FAST_RATES });
+  const rejectedClient = new Isekai({ fetch: mockFetch(rejected), keys: { "anime-skip": "bogus" }, rateLimits: FAST_RATES });
   const second = await rejectedClient.episode("mal:21", { number: 1, providers: ["kitsu"] });
   assert.equal(second.skip, null);
   assert.ok(second.errors.some((entry) => entry.provider === "anime-skip" && entry.code === "INVALID_KEY"));
 
   // 3) Anime Skip without an AniList id to map the show with
-  const kitsuOnly = new Shogo({
+  const kitsuOnly = new Isekai({
     fetch: mockFetch(noSkips),
     keys: { "anime-skip": "cid" },
     providers: ["kitsu"],
@@ -401,7 +401,7 @@ test("episode() explains why skip times are missing", async () => {
   assert.ok(third.skipped.some((entry) => entry.provider === "anime-skip" && entry.reason === "no-anilist-id"));
 
   // 4) backend mode may hold the key server-side: no MISSING_KEY throw
-  const backend = new Shogo({ fetch: mockFetch(routes()), proxy: "/api/proxy", rateLimits: FAST_RATES });
+  const backend = new Isekai({ fetch: mockFetch(routes()), proxy: "/api/proxy", rateLimits: FAST_RATES });
   const fourth = await backend.skipTimes("mal:21", { number: 1, skipProviders: ["anime-skip"] });
   assert.equal(fourth, null); // the proxied attempt is captured, not thrown as MISSING_KEY
 });
@@ -438,7 +438,7 @@ test("episode lists report totals and truncation; offset pages through them", as
         }
       : route
   );
-  const client = new Shogo({ fetch: mockFetch(paged), rateLimits: FAST_RATES });
+  const client = new Isekai({ fetch: mockFetch(paged), rateLimits: FAST_RATES });
 
   const first = await client.episodes("mal:21", { providers: ["kitsu"] });
   assert.equal(first.length, 60); // 3 pages x 20
@@ -472,7 +472,7 @@ test("findById merges jikan + anilist + kitsu + animap into one shape", async ()
   assert.equal(anime.ids.mal, 21);
   assert.equal(anime.ids.anilist, 21);
   assert.equal(anime.ids.kitsu, 12);
-  assert.equal(anime.ids.shogo, "12000000210000002117");
+  assert.equal(anime.ids.isekai, "12000000210000002117");
   assert.equal(anime.titles.romaji, "One Piece");
   assert.equal(anime.titles.native, "ワンピース");
   assert.equal(anime.synopsis, "Gold Roger was known as the Pirate King."); // kitsu is the default source
@@ -487,10 +487,10 @@ test("findById merges jikan + anilist + kitsu + animap into one shape", async ()
 
   // A second call is served from cache + the negative/short TTLs still hold.
   const again = await client.findById("mal:21");
-  assert.equal(again.ids.shogo, "12000000210000002117");
+  assert.equal(again.ids.isekai, "12000000210000002117");
 });
 
-test("bare ids are shogo ids; invalid ones throw with a hint", async () => {
+test("bare ids are isekai ids; invalid ones throw with a hint", async () => {
   const { client } = makeClient();
   const anime = await client.findById(2105);
   assert.equal(anime.ids.mal, 21);
@@ -644,14 +644,14 @@ test("AniSkip not-found falls back to a configured Anime Skip", async () => {
         }
       : route
   );
-  const client = new Shogo({ fetch: mockFetch(notFound), keys: { "anime-skip": "test-client-id" }, rateLimits: FAST_RATES });
+  const client = new Isekai({ fetch: mockFetch(notFound), keys: { "anime-skip": "test-client-id" }, rateLimits: FAST_RATES });
   const skip = await client.skipTimes("mal:21", { number: 1 });
   assert.equal(skip.source, "anime-skip");
   assert.equal(skip.op.end, 135);
   assert.ok(skip.skipped.some((entry) => entry.provider === "aniskip" && entry.reason === "not-found"));
 });
 
-test("catalog works from an offline snapshot (titles <-> shogo ids, zero network)", async () => {
+test("catalog works from an offline snapshot (titles <-> isekai ids, zero network)", async () => {
   const { client } = makeClient();
   client.offline.load({
     data: [
@@ -677,7 +677,7 @@ test("catalog works from an offline snapshot (titles <-> shogo ids, zero network
   const cat = await client.catalog();
   assert.equal(cat.size, 2);
   assert.equal(cat.bySlug("one-piece").mal, 21);
-  assert.equal(cat.byShogoId("12000000210000002117").mal, 21);
+  assert.equal(cat.byIsekaiId("12000000210000002117").mal, 21);
   const found = cat.search("boku no hero academia");
   assert.equal(found[0].mal, 31964);
 
@@ -697,7 +697,7 @@ test("resolve fills targets, reports missing; dryRun plans; selectors project", 
   assert.ok(Array.isArray(plan.plan));
   assert.ok(plan.plan.some((p) => p.provider === "jikan"));
 
-  const projected = await client.findById("mal:21", { include: ["titles", "ids.shogo"] });
+  const projected = await client.findById("mal:21", { include: ["titles", "ids.isekai"] });
   assert.equal(projected.titles.romaji, "One Piece");
   assert.equal(projected.synopsis, undefined);
   assert.equal(projected.ids.mal, 21); // ids are always kept
@@ -708,7 +708,7 @@ test("resolve fills targets, reports missing; dryRun plans; selectors project", 
 
 test("config.providers is a hard allow-list, including for search", async () => {
   const fetchImpl = mockFetch(routes());
-  const client = new Shogo({
+  const client = new Isekai({
     fetch: fetchImpl,
     providers: ["anilist", "kitsu"],
     rateLimits: FAST_RATES,

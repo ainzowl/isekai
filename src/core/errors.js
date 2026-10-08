@@ -13,11 +13,11 @@ export function redact(text, secrets) {
   return out;
 }
 
-export class ShogoError extends Error {
+export class IsekaiError extends Error {
   constructor(message, info = {}) {
     super(redact(message, info.secrets));
     this.name = this.constructor.name;
-    this.code = info.code || "SHOGO_ERROR";
+    this.code = info.code || "ISEKAI_ERROR";
     if (info.provider) this.provider = info.provider;
     if (info.url) this.url = redactUrl(info.url);
     if (info.status != null) this.status = info.status;
@@ -47,19 +47,19 @@ export const KEY_HINTS = {
   tmdb: "check the key at https://www.themoviedb.org/settings/api (v3 key or v4 bearer)",
 };
 
-export class MissingApiKeyError extends ShogoError {
+export class MissingApiKeyError extends IsekaiError {
   constructor(provider, extra) {
     super(
       '"' + provider + '" requires an API key for this request. Get one at ' +
         (KEY_SOURCES[provider] || "the provider's website") + " and pass it as: " +
-        'new Shogo({ keys: { "' + provider + '": "<key>" } })' +
+        'new Isekai({ keys: { "' + provider + '": "<key>" } })' +
         (extra ? " (" + extra + ")" : ""),
       { code: "MISSING_KEY", provider }
     );
   }
 }
 
-export class InvalidApiKeyError extends ShogoError {
+export class InvalidApiKeyError extends IsekaiError {
   constructor(provider, detail) {
     super(
       '"' + provider + '" rejected the configured key' + (detail ? " (" + detail + ")" : "") +
@@ -69,37 +69,37 @@ export class InvalidApiKeyError extends ShogoError {
   }
 }
 
-export class InvalidIdError extends ShogoError {
+export class InvalidIdError extends IsekaiError {
   constructor(message) {
     super(message, { code: "INVALID_ID" });
   }
 }
 
-export class NotFoundError extends ShogoError {
+export class NotFoundError extends IsekaiError {
   constructor(message, info = {}) {
     super(message, Object.assign({ code: "NOT_FOUND" }, info));
   }
 }
 
-export class RateLimitError extends ShogoError {
+export class RateLimitError extends IsekaiError {
   constructor(message, info = {}) {
     super(message, Object.assign({ code: "RATE_LIMITED" }, info));
   }
 }
 
-export class ProviderError extends ShogoError {
+export class ProviderError extends IsekaiError {
   constructor(message, info = {}) {
     super(message, Object.assign({ code: "PROVIDER_ERROR" }, info));
   }
 }
 
-export class ParseError extends ShogoError {
+export class ParseError extends IsekaiError {
   constructor(message, info = {}) {
     super(message, Object.assign({ code: "PARSE_ERROR" }, info));
   }
 }
 
-export class MappingError extends ShogoError {
+export class MappingError extends IsekaiError {
   constructor(message, info = {}) {
     super(message, Object.assign({ code: "MAPPING_FAILED" }, info));
   }
@@ -126,8 +126,8 @@ export function isRetryable(err) {
   return false;
 }
 
-export function toShogoError(err, info = {}) {
-  if (err instanceof ShogoError) return err;
+export function toIsekaiError(err, info = {}) {
+  if (err instanceof IsekaiError) return err;
   if (isAbortError(err)) return err;
   return new ProviderError(err && err.message ? err.message : String(err), Object.assign({ cause: err }, info));
 }

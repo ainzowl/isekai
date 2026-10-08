@@ -2,7 +2,7 @@
 // coalescing, retries, circuit breaker and hooks.
 
 import {
-  ShogoError,
+  IsekaiError,
   ProviderError,
   NotFoundError,
   RateLimitError,
@@ -10,7 +10,7 @@ import {
   abortError,
   isAbortError,
   isRetryable,
-  toShogoError,
+  toIsekaiError,
   redactUrl,
 } from "./errors.js";
 import { TTL } from "./cache.js";
@@ -21,9 +21,9 @@ export function resolveFetch(custom) {
   if (typeof globalThis !== "undefined" && typeof globalThis.fetch === "function") {
     return globalThis.fetch.bind(globalThis);
   }
-  throw new ShogoError(
+  throw new IsekaiError(
     "No fetch implementation is available on this runtime. Pass one explicitly: " +
-      "new Shogo({ fetch: myFetch }). See README (QuickJS-ng section).",
+      "new Isekai({ fetch: myFetch }). See README (QuickJS-ng section).",
     { code: "NO_FETCH" }
   );
 }
@@ -296,7 +296,7 @@ export function createHttp(options) {
           return { data, cache: "miss", status };
         } catch (err) {
           if (isAbortError(err)) throw err;
-          lastError = toShogoError(err, { provider: providerId, url });
+          lastError = toIsekaiError(err, { provider: providerId, url });
           const willRetry = isRetryable(lastError) && attempt <= retries;
           hook("onError", { provider: providerId, method, url: safeUrl, error: lastError, attempt, willRetry });
           if (!willRetry) {

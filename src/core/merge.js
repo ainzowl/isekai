@@ -263,7 +263,7 @@ export function mergeAnime(parts, opts = {}) {
   }
   anime.ratings = ratings;
 
-  // shogo score: the average of every provider score, normalized to 0-10.
+  // isekai score: the average of every provider score, normalized to 0-10.
   const scored = [];
   for (const provider of Object.keys(ratings)) {
     const rating = ratings[provider];

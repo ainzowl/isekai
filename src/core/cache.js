@@ -1,7 +1,7 @@
 // Cache entries: { value, etag?, expiresAt? }.
 // Custom { get(k), set(k, v, ttl) } stores are detected and adapted.
 
-import { ShogoError } from "./errors.js";
+import { IsekaiError } from "./errors.js";
 
 export const TTL = {
   idMap: 30 * 24 * 60 * 60 * 1000,
@@ -59,7 +59,7 @@ export function normalizeCache(option, now) {
   if (option == null || option === "memory") return createMemoryCache(now);
   const custom = option;
   if (typeof custom.get !== "function" || typeof custom.set !== "function") {
-    throw new ShogoError('cache must be false, "memory", or { get(key), set(key[, value, ttlMs]) }', {
+    throw new IsekaiError('cache must be false, "memory", or { get(key), set(key[, value, ttlMs]) }', {
       code: "BAD_OPTION",
     });
   }

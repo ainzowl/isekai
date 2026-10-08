@@ -1,4 +1,4 @@
-// shogo-anime/testing: mock fetch for tests.
+// @ainzoal/isekai/testing: mock fetch for tests.
 
 function headerBag(headers) {
   const map = {};

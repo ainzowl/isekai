@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>shogo — one clean interface over every anime service</title>
+  <title>isekai — one clean interface over every anime service</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌀</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Overpass:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -39,13 +39,13 @@
       <span class="grid h-8 w-8 place-items-center rounded-lg bg-brand/15 text-brand ring-1 ring-brand/30">
         <i data-lucide="orbit" class="h-4 w-4"></i>
       </span>
-      shogo
+      isekai
       <span class="rounded-full bg-ink-800 px-2 py-0.5 text-[10px] font-medium text-slate-400 ring-1 ring-ink-700">v0.1.0</span>
     </a>
     <nav class="flex items-center gap-5 text-sm">
       <a class="hover:text-white" href="./documentation/">documentation</a>
       <a class="hover:text-white" href="./examples/">playground</a>
-      <a class="rounded-lg bg-brand px-3 py-1.5 font-medium text-ink-950 hover:bg-brand-dark" href="./shogo/shogo.html">
+      <a class="rounded-lg bg-brand px-3 py-1.5 font-medium text-ink-950 hover:bg-brand-dark" href="./isekai/isekai.html">
         open the app
       </a>
     </nav>
@@ -72,7 +72,7 @@
         <a href="./examples/" class="inline-flex items-center gap-2 rounded-xl bg-ink-900 px-5 py-2.5 font-medium text-white ring-1 ring-ink-700 hover:bg-ink-800">
           <i data-lucide="play" class="h-4 w-4 text-brand"></i> Try it live
         </a>
-        <a href="./shogo/shogo.html" class="inline-flex items-center gap-2 rounded-xl bg-ink-900 px-5 py-2.5 font-medium text-white ring-1 ring-ink-700 hover:bg-ink-800">
+        <a href="./isekai/isekai.html" class="inline-flex items-center gap-2 rounded-xl bg-ink-900 px-5 py-2.5 font-medium text-white ring-1 ring-ink-700 hover:bg-ink-800">
           <i data-lucide="compass" class="h-4 w-4 text-brand"></i> Browse anime
         </a>
       </div>
@@ -89,13 +89,13 @@
             <i data-lucide="copy" class="h-3.5 w-3.5"></i> copy
           </button>
         </div>
-        <pre class="overflow-x-auto p-4 text-[13px] leading-relaxed font-mono"><code id="hero-code"><span class="text-slate-500">$</span> npm install shogo-anime
+        <pre class="overflow-x-auto p-4 text-[13px] leading-relaxed font-mono"><code id="hero-code"><span class="text-slate-500">$</span> npm install @ainzoal/isekai
 
-<span class="text-fuchsia-300">import</span> { <span class="text-brand">Shogo</span> } <span class="text-fuchsia-300">from</span> <span class="text-emerald-300">"shogo-anime"</span>;
+<span class="text-fuchsia-300">import</span> { <span class="text-brand">Isekai</span> } <span class="text-fuchsia-300">from</span> <span class="text-emerald-300">"@ainzoal/isekai"</span>;
 
-<span class="text-fuchsia-300">const</span> shogo = <span class="text-fuchsia-300">new</span> <span class="text-brand">Shogo</span>();
-<span class="text-fuchsia-300">const</span> anime = <span class="text-fuchsia-300">await</span> shogo.<span class="text-sky-300">findById</span>(<span class="text-emerald-300">"mal:21"</span>);
-<span class="text-slate-500">// -&gt; { ids: { mal: 21, anilist: 21, kitsu: 12, shogo: "12000000210000002117", ... },</span>
+<span class="text-fuchsia-300">const</span> isekai = <span class="text-fuchsia-300">new</span> <span class="text-brand">Isekai</span>();
+<span class="text-fuchsia-300">const</span> anime = <span class="text-fuchsia-300">await</span> isekai.<span class="text-sky-300">findById</span>(<span class="text-emerald-300">"mal:21"</span>);
+<span class="text-slate-500">// -&gt; { ids: { mal: 21, anilist: 21, kitsu: 12, isekai: "12000000210000002117", ... },</span>
 <span class="text-slate-500">//      titles: { romaji: "ONE PIECE", ... }, synopsis, images, sources: [...] }</span></code></pre>
       </div>
     </section>
@@ -108,7 +108,7 @@
         </div>
         <h2 class="font-display text-lg font-bold text-white">Documentation</h2>
         <p class="mt-2 text-sm text-slate-400">
-          Install, the one shape, packed shogo IDs, slugs, methods, providers, keys,
+          Install, the one shape, packed isekai IDs, slugs, methods, providers, keys,
           caching, hooks, runtime notes and attribution.
         </p>
         <span class="mt-4 inline-flex items-center gap-1 text-sm text-brand">
@@ -121,18 +121,18 @@
         </div>
         <h2 class="font-display text-lg font-bold text-white">Live playground</h2>
         <p class="mt-2 text-sm text-slate-400">
-          Edit and run real shogo code in your browser against the live APIs.
+          Edit and run real isekai code in your browser against the live APIs.
           Snippets for search, IDs, episodes and mapping — copy with one click.
         </p>
         <span class="mt-4 inline-flex items-center gap-1 text-sm text-brand">
           try it <i data-lucide="arrow-right" class="h-4 w-4 transition group-hover:translate-x-0.5"></i>
         </span>
       </a>
-      <a href="./shogo/shogo.html" class="group rounded-2xl bg-ink-900 p-6 ring-1 ring-ink-700 transition hover:ring-brand/40">
+      <a href="./isekai/isekai.html" class="group rounded-2xl bg-ink-900 p-6 ring-1 ring-ink-700 transition hover:ring-brand/40">
         <div class="mb-4 grid h-10 w-10 place-items-center rounded-xl bg-brand/10 text-brand ring-1 ring-brand/20">
           <i data-lucide="compass" class="h-5 w-5"></i>
         </div>
-        <h2 class="font-display text-lg font-bold text-white">The shogo app</h2>
+        <h2 class="font-display text-lg font-bold text-white">The isekai app</h2>
         <p class="mt-2 text-sm text-slate-400">
           An AniList-flavoured browser: search anime, open a rich detail view,
           inspect episodes and skip times — every action comes with the code to reproduce it.
@@ -145,7 +145,7 @@
   </main>
 
   <footer class="mx-auto max-w-6xl px-6 pb-10 pt-4 text-center text-xs text-slate-600">
-    shogo is MIT licensed. Provider data remains subject to its upstream terms —
+    isekai is MIT licensed. Provider data remains subject to its upstream terms —
     AniDB (CC BY-NC-SA), ANN, TMDB (“not endorsed or certified by TMDB”), animap.id and Anime Skip.
   </footer>
 

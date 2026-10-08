@@ -1,18 +1,18 @@
 /**
- * The shogo app: browse anime on top of the package.
+ * The isekai app: browse anime on top of the package.
  * Every action shows the exact code it used — copy and paste it anywhere.
  */
-import { Shogo } from "../../src/index.js";
+import { Isekai } from "../../src/index.js";
 
 // ---------------------------------------------------------------- settings
 const ALL_PROVIDERS = ["jikan", "kitsu", "anilist", "animap", "tmdb", "anime-skip"];
 const stored = {
-  providers: JSON.parse(localStorage.getItem("shogo.providers") || "null"),
-  tmdb: localStorage.getItem("shogo.tmdb") || "",
-  skip: localStorage.getItem("shogo.skip") || "",
-  mode: localStorage.getItem("shogo.mode") === "backend" ? "backend" : "frontend",
-  source: localStorage.getItem("shogo.source") || "kitsu",
-  skipSources: JSON.parse(localStorage.getItem("shogo.skipSources") || "null") || ["aniskip", "anime-skip"],
+  providers: JSON.parse(localStorage.getItem("isekai.providers") || "null"),
+  tmdb: localStorage.getItem("isekai.tmdb") || "",
+  skip: localStorage.getItem("isekai.skip") || "",
+  mode: localStorage.getItem("isekai.mode") === "backend" ? "backend" : "frontend",
+  source: localStorage.getItem("isekai.source") || "kitsu",
+  skipSources: JSON.parse(localStorage.getItem("isekai.skipSources") || "null") || ["aniskip", "anime-skip"],
 };
 const selected = new Set(stored.providers || ["jikan", "kitsu", "anilist", "animap"]);
 
@@ -29,11 +29,11 @@ function buildClient() {
     breaker: { threshold: 3, cooldownMs: 60000 },
   };
   if (stored.mode === "backend") options.proxy = "/api/proxy"; // route through this docs server
-  return new Shogo(options);
+  return new Isekai(options);
 }
 
 function setupSnippet() {
-  return stored.mode === "backend" ? 'const shogo = new Shogo({ proxy: "/api/proxy" });' : "const shogo = new Shogo();";
+  return stored.mode === "backend" ? 'const isekai = new Isekai({ proxy: "/api/proxy" });' : "const isekai = new Isekai();";
 }
 
 function transportLabel() {
@@ -188,7 +188,7 @@ function refFor(ids, slug) {
   if (ids && ids.mal != null) return "mal:" + ids.mal;
   if (ids && ids.anilist != null) return "anilist:" + ids.anilist;
   if (ids && ids.kitsu != null) return "kitsu:" + ids.kitsu;
-  if (ids && ids.shogo) return ids.shogo;
+  if (ids && ids.isekai) return ids.isekai;
   if (slug) return slug;
   return null;
 }
@@ -321,7 +321,7 @@ function renderSettings() {
 function setSource(id) {
   if (stored.source === id) return;
   stored.source = id;
-  localStorage.setItem("shogo.source", id);
+  localStorage.setItem("isekai.source", id);
   client = buildClient();
   renderSettings();
   toast("default source: " + id, "info");
@@ -332,7 +332,7 @@ function setSource(id) {
 function setMode(id) {
   if (stored.mode === id) return;
   stored.mode = id;
-  localStorage.setItem("shogo.mode", id);
+  localStorage.setItem("isekai.mode", id);
   client = buildClient();
   renderSettings();
   toast(
@@ -346,10 +346,10 @@ function setMode(id) {
 }
 
 function persist() {
-  localStorage.setItem("shogo.providers", JSON.stringify([...selected]));
-  localStorage.setItem("shogo.tmdb", $("settings-tmdb").value.trim());
-  localStorage.setItem("shogo.skip", $("settings-skip").value.trim());
-  localStorage.setItem("shogo.skipSources", JSON.stringify(stored.skipSources));
+  localStorage.setItem("isekai.providers", JSON.stringify([...selected]));
+  localStorage.setItem("isekai.tmdb", $("settings-tmdb").value.trim());
+  localStorage.setItem("isekai.skip", $("settings-skip").value.trim());
+  localStorage.setItem("isekai.skipSources", JSON.stringify(stored.skipSources));
   stored.tmdb = $("settings-tmdb").value.trim();
   stored.skip = $("settings-skip").value.trim();
   client = buildClient();
@@ -380,7 +380,7 @@ async function validateSkipKey() {
   status.textContent = "checking the client id\u2026";
   const token = ++skipCheckToken;
   try {
-    const probe = new Shogo({ keys: { "anime-skip": value }, providers: [] });
+    const probe = new Isekai({ keys: { "anime-skip": value }, providers: [] });
     await probe.raw.animeSkip("query { __typename }");
     if (token !== skipCheckToken) return;
     status.className = "mt-1 text-[11px] text-emerald-400";
@@ -452,9 +452,9 @@ async function doSearch(query) {
   const started = performance.now();
 
   const code =
-    'import { Shogo } from "shogo-anime";\n\n' +
+    'import { Isekai } from "@ainzoal/isekai";\n\n' +
     setupSnippet() + "\n" +
-    "const results = await shogo.search(" + JSON.stringify(query) + ");\n" +
+    "const results = await isekai.search(" + JSON.stringify(query) + ");\n" +
     "// results[i].ids, .titles, .sources, .rating, .year, .type";
   $("results-code").innerHTML = codeBlock(code, "search()");
   icons();
@@ -527,9 +527,9 @@ async function openDetail(ref) {
   view.innerHTML = '<div class="rounded-2xl border border-ink-700 bg-ink-900 p-6"><div class="skeleton h-64 w-full rounded-xl bg-ink-800"></div></div>';
 
   const code =
-    'import { Shogo } from "shogo-anime";\n\n' +
+    'import { Isekai } from "@ainzoal/isekai";\n\n' +
     setupSnippet() + "\n" +
-    "const anime = await shogo.findById(" + JSON.stringify(ref) + ");\n" +
+    "const anime = await isekai.findById(" + JSON.stringify(ref) + ");\n" +
     "// anime.ids, .titles, .synopsis, .ratings, .images, .links, .relations, .sources";
   try {
     const anime = await client.findById(ref);
@@ -550,14 +550,14 @@ function scoreBadges(anime) {
   const parts = [];
   if (anime.score && anime.score.value != null) {
     parts.push(
-      '<span class="inline-flex items-center gap-1.5 rounded-lg bg-brand/15 px-2 py-1 text-xs ring-1 ring-brand/30" title="shogo score — average of ' +
+      '<span class="inline-flex items-center gap-1.5 rounded-lg bg-brand/15 px-2 py-1 text-xs ring-1 ring-brand/30" title="isekai score — average of ' +
         anime.score.providers +
         " provider score(s): " +
         esc(JSON.stringify(anime.score.breakdown)) +
         '">' +
         '<span class="font-bold text-brand">' +
         anime.score.value.toFixed(2) +
-        '</span><span class="text-sky-200/70">shogo</span></span>'
+        '</span><span class="text-sky-200/70">isekai</span></span>'
     );
   }
   const ratings = anime.ratings || {};
@@ -593,7 +593,7 @@ function renderDetail(view, anime, ref, code) {
       const text = typeof value === "object" ? JSON.stringify(value) : String(value);
       return (
         "<tr><td class=\"py-1 pr-3 text-xs text-slate-500\">" + esc(key) + '</td><td class="py-1 font-mono text-xs text-sky-300">' + esc(text) +
-        (key === "shogo" ? ' <span class="chip ml-1 border-brand/40 text-sky-200">packed</span>' : "") +
+        (key === "isekai" ? ' <span class="chip ml-1 border-brand/40 text-sky-200">packed</span>' : "") +
         "</td></tr>"
       );
     })
@@ -655,7 +655,7 @@ function renderDetail(view, anime, ref, code) {
     '<aside class="space-y-6">' +
     codeBlock(code, "findById()") +
     '<div class="rounded-2xl border border-ink-700 bg-ink-900 p-4"><p class="mb-2 font-display text-sm font-bold text-white">ids</p><table class="w-full">' + idRows + "</table>" +
-    '<p class="mt-2 text-[11px] text-slate-500">store <code class="text-sky-300">ids.shogo</code> as a string — pure math, no lookups</p></div>' +
+    '<p class="mt-2 text-[11px] text-slate-500">store <code class="text-sky-300">ids.isekai</code> as a string — pure math, no lookups</p></div>' +
     (relations ? '<div class="rounded-2xl border border-ink-700 bg-ink-900 p-4"><p class="mb-2 font-display text-sm font-bold text-white">relations</p>' + relations + "</div>" : "") +
     "</aside></div>";
 
@@ -738,8 +738,8 @@ async function loadEpisodes(ref, season) {
 
   const tags = episodeProviderTags();
   const code =
-    "const seasons = await shogo.seasons(" + JSON.stringify(ref) + ");\n" +
-    "const eps = await shogo.episodes(" + JSON.stringify(ref) + ", { season: " + season + ", providers: " + JSON.stringify(tags) +
+    "const seasons = await isekai.seasons(" + JSON.stringify(ref) + ");\n" +
+    "const eps = await isekai.episodes(" + JSON.stringify(ref) + ", { season: " + season + ", providers: " + JSON.stringify(tags) +
     (episodeMaxPages !== 3 ? ", maxPages: " + episodeMaxPages : "") +
     " });\n" +
     "// eps.consolidated.providers.<id>.total / .truncated -> page with { offset, maxPages }";
@@ -807,7 +807,7 @@ async function openEpisode(ref, season, number) {
   const tags = episodeProviderTags();
   const skipTags = skipProviderTags();
   const code =
-    "const ctx = await shogo.episode(" + JSON.stringify(ref) + ", { season: " + season + ", number: " + number + ",\n" +
+    "const ctx = await isekai.episode(" + JSON.stringify(ref) + ", { season: " + season + ", number: " + number + ",\n" +
     "  providers: " + JSON.stringify(tags) + ",   // episode lists\n" +
     "  skipProviders: " + JSON.stringify(skipTags) + " }); // skip times (AniSkip is keyless)\n" +
     "// ctx.episode.refs maps every provider's own numbering";

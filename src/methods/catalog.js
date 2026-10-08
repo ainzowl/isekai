@@ -1,6 +1,6 @@
-// catalog(): titles <-> shogo ids from an offline animap snapshot or live Jikan.
+// catalog(): titles <-> isekai ids from an offline animap snapshot or live Jikan.
 
-import { slugify, toShogo, fromShogo } from "../core/ids.js";
+import { slugify, toIsekai, fromIsekai } from "../core/ids.js";
 import { parseSources } from "../providers/animap.js";
 import { metaOf } from "./common.js";
 import { scoreCandidate } from "./identify.js";
@@ -8,16 +8,16 @@ import { scoreCandidate } from "./identify.js";
 function entryFromRecord(record) {
   const ids = parseSources(record && record.sources);
   const title = record && record.title;
-  let shogoId = null;
+  let isekaiId = null;
   try {
     if (ids.mal != null || ids.anilist != null || ids.kitsu != null) {
-      shogoId = toShogo({ mal: ids.mal, anilist: ids.anilist, kitsu: ids.kitsu });
+      isekaiId = toIsekai({ mal: ids.mal, anilist: ids.anilist, kitsu: ids.kitsu });
     }
   } catch (err) {
-    shogoId = null;
+    isekaiId = null;
   }
   return {
-    shogoId,
+    isekaiId,
     slug: title ? slugify(title) : null,
     mal: ids.mal != null ? ids.mal : null,
     anilist: ids.anilist != null ? ids.anilist : null,
@@ -33,7 +33,7 @@ function entryFromRecord(record) {
 
 async function entryFromJikan(d) {
   return {
-    shogoId: d.mal_id != null ? toShogo({ mal: Number(d.mal_id) }) : null,
+    isekaiId: d.mal_id != null ? toIsekai({ mal: Number(d.mal_id) }) : null,
     slug: slugify(d.title || ""),
     mal: d.mal_id != null ? Number(d.mal_id) : null,
     anilist: null,
@@ -52,7 +52,7 @@ function buildIndex(entries, source) {
   const byId = new Map();
   for (const entry of entries) {
     if (entry.slug && !bySlug.has(entry.slug)) bySlug.set(entry.slug, entry);
-    if (entry.shogoId) byId.set(String(entry.shogoId), entry);
+    if (entry.isekaiId) byId.set(String(entry.isekaiId), entry);
     for (const key of ["mal", "anilist", "kitsu"]) {
       if (entry[key] != null) byId.set(key + ":" + entry[key], entry);
     }
@@ -90,10 +90,10 @@ function buildIndex(entries, source) {
       const clean = slugify(slug);
       return bySlug.get(clean) || null;
     },
-    byShogoId(value) {
+    byIsekaiId(value) {
       const direct = byId.get(String(value));
       if (direct) return direct;
-      const ids = fromShogo(value);
+      const ids = fromIsekai(value);
       if (!ids) return null;
       for (const key of ["mal", "anilist", "kitsu"]) {
         if (ids[key] != null) {
@@ -113,7 +113,7 @@ export async function catalog(client, opts = {}) {
   let entries = [];
 
   if (source === "snapshot") {
-    if (!client.offline.loaded) throw new Error("No offline snapshot loaded; call shogo.offline.load(json) first (or use { source: 'live' })");
+    if (!client.offline.loaded) throw new Error("No offline snapshot loaded; call isekai.offline.load(json) first (or use { source: 'live' })");
     for (const record of client.offline.records()) {
       const entry = entryFromRecord(record);
       if (entry.slug) entries.push(entry);

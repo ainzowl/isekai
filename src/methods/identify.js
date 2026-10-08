@@ -182,7 +182,7 @@ export async function findBySlug(client, slug, opts = {}) {
     if (entry) {
       const match = {
         slug: entry.slug,
-        ids: { mal: entry.mal, anilist: entry.anilist, kitsu: entry.kitsu, shogo: entry.shogoId },
+        ids: { mal: entry.mal, anilist: entry.anilist, kitsu: entry.kitsu, isekai: entry.isekaiId },
         titles: entry.titles,
         confidence: 1,
         reasons: ["catalog slug"],

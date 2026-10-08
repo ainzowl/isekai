@@ -11,7 +11,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Zero-dependency ESM client merging Jikan (MyAnimeList), Kitsu, AniList,
   animap.id, TMDB, AniSkip and Anime Skip into one shape. Node 18+, Bun, Deno,
   browsers and QuickJS-ng via a replaceable `fetch`.
-- Packed shogo ids: MAL + AniList + Kitsu slots with a checksum, bare-id
+- Packed isekai ids: MAL + AniList + Kitsu slots with a checksum, bare-id
   parsing, merge and equivalence rules.
 - Slugs: `slugify`, `findBySlug` (native Kitsu slug → catalog index →
   `identify`), bare text treated as a slug.

@@ -1,5 +1,5 @@
 /**
- * shogo — hand-written public types. No codegen, no dependencies.
+ * isekai — hand-written public types. No codegen, no dependencies.
  * Minimum TypeScript `lib`: ES2020. DOM is NOT required (we ship FetchLike).
  */
 
@@ -10,7 +10,7 @@
 export type IdRef =
   | string
   | number
-  | { shogo?: string | number; slug?: string; mal?: number; anilist?: number; kitsu?: number }
+  | { isekai?: string | number; slug?: string; mal?: number; anilist?: number; kitsu?: number }
   | {
       mal?: number;
       anilist?: number;
@@ -29,7 +29,7 @@ export type IdRef =
     };
 
 export interface Ids {
-  shogo?: string;
+  isekai?: string;
   mal?: number;
   anilist?: number;
   kitsu?: number;
@@ -47,14 +47,14 @@ export interface Ids {
 }
 
 export type ParsedId =
-  | { kind: "shogo"; shogo: string; ids: Ids }
+  | { kind: "isekai"; isekai: string; ids: Ids }
   | { kind: "ids"; ids: Ids }
   | { kind: "slug"; slug: string };
 
-export function toShogo(ids: Ids): string;
-export function fromShogo(value: string | number): Ids | null;
-export function isShogoId(value: unknown): boolean;
-export function mergeShogo(
+export function toIsekai(ids: Ids): string;
+export function fromIsekai(value: string | number): Ids | null;
+export function isIsekaiId(value: unknown): boolean;
+export function mergeIsekai(
   a: string | number,
   b: string | number
 ): { ids: Ids; conflicts: Array<{ slot: string; kept: number; dropped: number }> } | null;
@@ -281,7 +281,7 @@ export interface EpisodeContext {
 }
 
 export interface Match {
-  shogoId?: string | null;
+  isekaiId?: string | null;
   slug?: string | null;
   ids: Ids;
   titles: Titles;
@@ -309,7 +309,7 @@ export interface MappingResult {
 }
 
 export interface CatalogEntry {
-  shogoId: string | null;
+  isekaiId: string | null;
   slug: string | null;
   mal: number | null;
   anilist: number | null;
@@ -331,14 +331,14 @@ export interface Catalog {
     CatalogEntry & { confidence: number; reasons: string[]; matchedTitle: string | null }
   >;
   bySlug(slug: string): CatalogEntry | null;
-  byShogoId(value: string | number): CatalogEntry | null;
+  byIsekaiId(value: string | number): CatalogEntry | null;
 }
 
 // ---------------------------------------------------------------------------
 // errors
 // ---------------------------------------------------------------------------
 
-export class ShogoError extends Error {
+export class IsekaiError extends Error {
   code: string;
   provider?: string;
   url?: string;
@@ -346,14 +346,14 @@ export class ShogoError extends Error {
   retryAfterMs?: number;
   toJSON(): { name: string; code: string; message: string; provider?: string; url?: string; status?: number };
 }
-export class MissingApiKeyError extends ShogoError {}
-export class InvalidApiKeyError extends ShogoError {}
-export class InvalidIdError extends ShogoError {}
-export class NotFoundError extends ShogoError {}
-export class RateLimitError extends ShogoError {}
-export class ProviderError extends ShogoError {}
-export class ParseError extends ShogoError {}
-export class MappingError extends ShogoError {}
+export class MissingApiKeyError extends IsekaiError {}
+export class InvalidApiKeyError extends IsekaiError {}
+export class InvalidIdError extends IsekaiError {}
+export class NotFoundError extends IsekaiError {}
+export class RateLimitError extends IsekaiError {}
+export class ProviderError extends IsekaiError {}
+export class ParseError extends IsekaiError {}
+export class MappingError extends IsekaiError {}
 
 // ---------------------------------------------------------------------------
 // runtime plumbing
@@ -408,7 +408,7 @@ export const mergeDefaults: {
   providers: readonly string[];
 };
 
-export interface ShogoOptions {
+export interface IsekaiOptions {
   fetch?: FetchLike;
   clock?: Clock;
   keys?: { tmdb?: string; "anime-skip"?: string; [key: string]: string | undefined };
@@ -470,8 +470,8 @@ export interface CallOptions {
 // client
 // ---------------------------------------------------------------------------
 
-export class Shogo {
-  constructor(options?: ShogoOptions);
+export class Isekai {
+  constructor(options?: IsekaiOptions);
 
   readonly version: string;
   readonly transport: "backend" | "frontend";
@@ -479,11 +479,11 @@ export class Shogo {
   readonly mergeDefaults: typeof mergeDefaults;
 
   readonly ids: {
-    toShogo: typeof toShogo;
-    fromShogo: typeof fromShogo;
-    isShogoId: typeof isShogoId;
+    toIsekai: typeof toIsekai;
+    fromIsekai: typeof fromIsekai;
+    isIsekaiId: typeof isIsekaiId;
     slugify: typeof slugify;
-    merge: typeof mergeShogo;
+    merge: typeof mergeIsekai;
     equivalent: typeof equivalent;
     parseId: typeof parseId;
     formatId: typeof formatId;
@@ -551,10 +551,10 @@ export class Shogo {
   catalog(opts?: CallOptions & { source?: "snapshot" | "live"; maxPages?: number }): Promise<Catalog>;
 }
 
-export function createShogo(options?: ShogoOptions): Shogo;
+export function createIsekai(options?: IsekaiOptions): Isekai;
 
 // ---------------------------------------------------------------------------
-// testing subpath (shogo-anime/testing)
+// testing subpath (@ainzoal/isekai/testing)
 // ---------------------------------------------------------------------------
 
 export interface MockRoute {
@@ -569,9 +569,9 @@ export function mockFetch(
 ): FetchLike & { calls: Array<{ url: string; init: object }> };
 
 // ---------------------------------------------------------------------------
-// ids subpath (shogo-anime/ids)
+// ids subpath (@ainzoal/isekai/ids)
 // ---------------------------------------------------------------------------
 
 export const PROVIDERS: readonly string[];
-export const SHOGO_SLOTS: ReadonlyArray<readonly [string, number]>;
-export function shogoKey(shogoId: string | number): string | null;
+export const ISEKAI_SLOTS: ReadonlyArray<readonly [string, number]>;
+export function isekaiKey(isekaiId: string | number): string | null;

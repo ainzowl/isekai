@@ -1,4 +1,4 @@
-# shogo
+# isekai
 
 One clean interface over every anime service: metadata, IDs, images, seasons,
 episodes and skip times from Jikan (MyAnimeList), Kitsu, AniList, animap.id,
@@ -13,31 +13,31 @@ TMDB, AniSkip and Anime Skip — merged into a single shape.
 ## Install
 
 ```sh
-npm install shogo-anime
+npm install @ainzoal/isekai
 ```
 
 ## Quick start
 
 ```js
-import { Shogo } from "shogo-anime";
+import { Isekai } from "@ainzoal/isekai";
 
-const shogo = new Shogo();
+const isekai = new Isekai();
 
-const anime = await shogo.findById("mal:21");
+const anime = await isekai.findById("mal:21");
 anime.titles.romaji;   // "ONE PIECE"
-anime.ids.shogo;       // "12000000210000002117" (packed MAL + AniList + Kitsu id)
+anime.ids.isekai;       // "12000000210000002117" (packed MAL + AniList + Kitsu id)
 anime.score;           // { value: 8.55, scale: 10, breakdown: { mal, anilist, ... } }
 anime.sources;         // ["kitsu", "anilist", "animap"]
 anime.errors;          // partial failures, never thrown
 
-const matches = await shogo.search("bocchi the rock");
-const guess = await shogo.identify("bocchi the rock");     // best match + confidence
-const ctx = await shogo.episode("mal:21", { number: 1 });  // anime + episode + skip + stills
+const matches = await isekai.search("bocchi the rock");
+const guess = await isekai.identify("bocchi the rock");     // best match + confidence
+const ctx = await isekai.episode("mal:21", { number: 1 });  // anime + episode + skip + stills
 ```
 
 `findById` accepts anything: `"mal:21"`, `{ mal: 21 }`, `"kitsu:12"`,
-`"tmdb:tv:37854"`, `"tt0388629"`, a slug (`"one-piece"`), or a packed shogo id
-(`2105` — bare pure digits are always shogo ids; use `mal:21` for MAL).
+`"tmdb:tv:37854"`, `"tt0388629"`, a slug (`"one-piece"`), or a packed isekai id
+(`2105` — bare pure digits are always isekai ids; use `mal:21` for MAL).
 
 ## Providers
 
@@ -53,7 +53,7 @@ const ctx = await shogo.episode("mal:21", { number: 1 });  // anime + episode + 
 | Anime Skip | client id | optional second skip source (OP/ED timestamps via AniList ids) |
 
 ```js
-const shogo = new Shogo({
+const isekai = new Isekai({
   keys: { tmdb: process.env.TMDB_API_KEY, "anime-skip": process.env.ANIME_SKIP_ID },
   defaultSource: "kitsu", // or "jikan" / "anilist"
 });
@@ -65,15 +65,15 @@ fix (where to create the key, which header the API reads).
 
 ## IDs
 
-Packed shogo ids hold the MAL, AniList and Kitsu ids plus a checksum. Decoding
+Packed isekai ids hold the MAL, AniList and Kitsu ids plus a checksum. Decoding
 is pure math — no cache, no database, no network:
 
 ```js
-shogo.ids.toShogo({ mal: 21 });                        // "2105"
-shogo.ids.toShogo({ mal: 21, anilist: 21, kitsu: 12 }); // "12000000210000002117"
-shogo.ids.fromShogo("2105");                           // { mal: 21 }
-shogo.ids.equivalent("2105", "12000000210000002117");  // true
-shogo.ids.merge("2105", "12000000210000002117");       // { ids, conflicts }
+isekai.ids.toIsekai({ mal: 21 });                        // "2105"
+isekai.ids.toIsekai({ mal: 21, anilist: 21, kitsu: 12 }); // "12000000210000002117"
+isekai.ids.fromIsekai("2105");                           // { mal: 21 }
+isekai.ids.equivalent("2105", "12000000210000002117");  // true
+isekai.ids.merge("2105", "12000000210000002117");       // { ids, conflicts }
 ```
 
 Store populated ids as strings (they exceed `Number.MAX_SAFE_INTEGER`). Typos
@@ -91,7 +91,7 @@ the native Kitsu slug (one exact request), then a loaded catalog index, then
 Every method returns the canonical model and the same envelope:
 
 ```js
-anime.ids;          // shogo, mal, anilist, kitsu, anidb, ann, tvdb, tmdb, imdb, ...
+anime.ids;          // isekai, mal, anilist, kitsu, anidb, ann, tvdb, tmdb, imdb, ...
 anime.titles;       // romaji, english, native, synonyms, localized
 anime.score;        // average of provider scores, normalized to 10, with breakdown
 anime.ratings;      // per provider: { score, votes, rank, ... }
@@ -123,7 +123,7 @@ the envelope on the array itself.
 | `characters(ref)` / `staff(ref)` | cast, voice actors, staff |
 | `relations(ref)` / `franchise(ref)` / `recommendations(ref)` / `schedule()` | grouped relations, timeline, recs, airing |
 | `resolve(ref, { to })` / `map(ref)` / `findByExternalId(p, id)` | `MappingResult` with `ids`, `conflicts`, `missing` |
-| `catalog({ source })` | titles ↔ shogo ids: `list()`, `search()`, `bySlug()`, `byShogoId()` |
+| `catalog({ source })` | titles ↔ isekai ids: `list()`, `search()`, `bySlug()`, `byIsekaiId()` |
 | `stats()`, `providers.*`, `mapping.conflicts()`, `raw.*` | introspection and escape hatches |
 
 Common options: `{ providers, include, exclude, signal, timeoutMs, cache, dryRun,
@@ -138,14 +138,14 @@ to the default source and converts tagged providers (`providers: [...]` or
 `"all"`) into one canonical list:
 
 ```js
-const eps = await shogo.episodes("mal:21", { providers: ["kitsu", "tmdb"] });
+const eps = await isekai.episodes("mal:21", { providers: ["kitsu", "tmdb"] });
 
 eps[0].refs; // { kitsu: { number: 1 }, tmdb: { season: 1, number: 1 }, ... }
 eps.consolidated;
 // { providers: { kitsu: { mode: "flat", count: 60, total: 1410, truncated: true } },
 //   total, matched, unmatched, truncated }
 
-await shogo.episodes("mal:21", { offset: 60, maxPages: 3 }); // page through long shows
+await isekai.episodes("mal:21", { offset: 60, maxPages: 3 }); // page through long shows
 ```
 
 Flat lists and season 1 align on the episode number; deeper seasons align on
@@ -158,7 +158,7 @@ silently cut. `season` filters keep flat episodes visible.
 Skip times work keyless: AniSkip answers by default with real ranges.
 
 ```js
-const skip = await shogo.skipTimes("mal:21", { number: 1 });
+const skip = await isekai.skipTimes("mal:21", { number: 1 });
 // { op: { start: 310.571, end: 400.571 }, ed: {...}, recap: {...}, source: "aniskip" }
 ```
 
@@ -181,18 +181,18 @@ There is no keyless MAL → TMDB bridge: TMDB joins a lookup when you pass a
 `tmdb:` / `tt…` / `tvdb:` id, or when an entry was found through `search()` /
 `identify()`. `screenshots("mal:21")` therefore needs a TMDB id first.
 
-`shogo.offline.load(animapDump)` indexes a user-provided animap.id dump so
+`isekai.offline.load(animapDump)` indexes a user-provided animap.id dump so
 `resolve()` and `catalog()` answer with zero network.
 
 ## Fetch modes
 
 Frontend mode (default) calls the providers from the runtime you are on — open
-CORS (verified `*` on every provider shogo ships). Backend mode routes every
+CORS (verified `*` on every provider isekai ships). Backend mode routes every
 request through your server instead:
 
 ```js
-const shogo = new Shogo({ proxy: "/api/proxy" }); // or proxy: true
-shogo.transport; // "backend"
+const isekai = new Isekai({ proxy: "/api/proxy" }); // or proxy: true
+isekai.transport; // "backend"
 ```
 
 The repo ships a hardened `/api/proxy` in `docs/serve.mjs`: provider host
@@ -220,20 +220,20 @@ provider is unreachable from the browser's network.
 All network traffic goes through one replaceable function:
 
 ```js
-import { Shogo } from "shogo-anime";
+import { Isekai } from "@ainzoal/isekai";
 import { fetch } from "your-host-fetch-binding"; // QuickJS-ng, React Native, ...
 
-const shogo = new Shogo({ fetch, clock: { now: () => Date.now(), sleep: hostSleep } });
+const isekai = new Isekai({ fetch, clock: { now: () => Date.now(), sleep: hostSleep } });
 ```
 
 No `node:` imports, no `URL`/`setTimeout` assumptions, ES2020-safe syntax
-(enforced by `npm run lint`). Subpaths: `shogo-anime/ids` (pure, ~2 KB),
-`shogo-anime/core`, `shogo-anime/testing` (`mockFetch` for your own tests). TypeScript
+(enforced by `npm run lint`). Subpaths: `@ainzoal/isekai/ids` (pure, ~2 KB),
+`@ainzoal/isekai/core`, `@ainzoal/isekai/testing` (`mockFetch` for your own tests). TypeScript
 needs only `lib: ["ES2020"]`; the package ships its own fetch types.
 
 ```js
-import { mockFetch } from "shogo-anime/testing";
-const client = new Shogo({
+import { mockFetch } from "@ainzoal/isekai/testing";
+const client = new Isekai({
   fetch: mockFetch([{ url: "https://api.jikan.moe/v4/anime/21/full", reply: { body: fixture } }]),
 });
 ```
@@ -254,7 +254,7 @@ For GitHub Pages, publish from the repository root — the docs live under
 
 ## Attribution
 
-shogo bundles no data; everything is fetched at runtime and stays subject to
+isekai bundles no data; everything is fetched at runtime and stays subject to
 upstream terms.
 
 - MyAnimeList/Jikan — unofficial API; self-hosting supported via `baseUrls.jikan`.
@@ -273,7 +273,7 @@ npm run lint    # ES2020 / portability rules for src
 npm run docs    # serve the docs site (has a --check self-test)
 ```
 
-Live tests are opt-in: `SHOGO_LIVE=1 npm test`. Fixtures live in
+Live tests are opt-in: `ISEKAI_LIVE=1 npm test`. Fixtures live in
 `test/fixtures/`.
 
 ## License

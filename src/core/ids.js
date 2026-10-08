@@ -1,16 +1,16 @@
-// Identifier model: packed shogo ids, parsing, formatting, slugs. Pure math.
+// Identifier model: packed isekai ids, parsing, formatting, slugs. Pure math.
 
 import { InvalidIdError } from "./errors.js";
 
 // Slot table (low -> high), widths in digits.
-export const SHOGO_SLOTS = [
+export const ISEKAI_SLOTS = [
   ["mal", 8],
   ["anilist", 8],
   ["kitsu", 8],
 ];
 
 export const PROVIDERS = [
-  "shogo", "slug", "mal", "anilist", "kitsu", "anidb", "ann", "animeplanet",
+  "isekai", "slug", "mal", "anilist", "kitsu", "anidb", "ann", "animeplanet",
   "anisearch", "livechart", "animecountdown", "simkl", "trakt", "tvdb", "tmdb",
   "imdb", "wikidata", "animeskip",
 ];
@@ -30,12 +30,12 @@ function checksum(body) {
 }
 
 // Pack mal/anilist/kitsu into a canonical checksummed decimal string.
-export function toShogo(input) {
+export function toIsekai(input) {
   const ids = input || {};
   let body = "";
-  for (let i = SHOGO_SLOTS.length - 1; i >= 0; i--) {
-    const key = SHOGO_SLOTS[i][0];
-    const width = SHOGO_SLOTS[i][1];
+  for (let i = ISEKAI_SLOTS.length - 1; i >= 0; i--) {
+    const key = ISEKAI_SLOTS[i][0];
+    const width = ISEKAI_SLOTS[i][1];
     const value = ids[key];
     if (value == null || value === 0) {
       body += "0".repeat(width);
@@ -43,19 +43,19 @@ export function toShogo(input) {
     }
     const s = String(value);
     if (!/^\d+$/.test(s)) {
-      throw new InvalidIdError('shogo id field "' + key + '" must be an integer, got ' + JSON.stringify(value));
+      throw new InvalidIdError('isekai id field "' + key + '" must be an integer, got ' + JSON.stringify(value));
     }
     if (s.length > width) {
-      throw new InvalidIdError('shogo id field "' + key + '" overflows ' + width + " digits: " + value);
+      throw new InvalidIdError('isekai id field "' + key + '" overflows ' + width + " digits: " + value);
     }
     body += s.padStart(width, "0");
   }
   body = body.replace(/^0+/, "");
-  if (!body) throw new InvalidIdError("toShogo() needs at least one of: " + SHOGO_SLOTS.map((s) => s[0]).join(", "));
+  if (!body) throw new InvalidIdError("toIsekai() needs at least one of: " + ISEKAI_SLOTS.map((s) => s[0]).join(", "));
   return body + checksum(body);
 }
 
-export function fromShogo(value) {
+export function fromIsekai(value) {
   const s = String(value == null ? "" : value);
   if (!/^\d+$/.test(s) || s.length < 3) return null;
   const body = s.slice(0, -2);
@@ -64,9 +64,9 @@ export function fromShogo(value) {
   if (checksum(body) !== cc) return null;
   const ids = {};
   let pos = body.length;
-  for (let i = 0; i < SHOGO_SLOTS.length && pos > 0; i++) {
-    const key = SHOGO_SLOTS[i][0];
-    const width = SHOGO_SLOTS[i][1];
+  for (let i = 0; i < ISEKAI_SLOTS.length && pos > 0; i++) {
+    const key = ISEKAI_SLOTS[i][0];
+    const width = ISEKAI_SLOTS[i][1];
     const start = Math.max(0, pos - width);
     const v = Number(body.slice(start, pos));
     if (v !== 0) ids[key] = v;
@@ -76,27 +76,27 @@ export function fromShogo(value) {
   return Object.keys(ids).length ? ids : null;
 }
 
-export function isShogoId(value) {
-  return fromShogo(value) !== null;
+export function isIsekaiId(value) {
+  return fromIsekai(value) !== null;
 }
 
 export function baseProviderOf(ids) {
-  for (const slot of SHOGO_SLOTS) {
+  for (const slot of ISEKAI_SLOTS) {
     if (ids && ids[slot[0]] != null) return slot[0];
   }
   return null;
 }
 
 // Union two ids; the higher-priority base keeps conflicting slots.
-export function mergeShogo(a, b) {
-  const x = fromShogo(a);
-  const y = fromShogo(b);
+export function mergeIsekai(a, b) {
+  const x = fromIsekai(a);
+  const y = fromIsekai(b);
   if (!x || !y) return null;
   const rank = (ids) => {
-    for (let i = 0; i < SHOGO_SLOTS.length; i++) {
-      if (ids[SHOGO_SLOTS[i][0]] != null) return i;
+    for (let i = 0; i < ISEKAI_SLOTS.length; i++) {
+      if (ids[ISEKAI_SLOTS[i][0]] != null) return i;
     }
-    return SHOGO_SLOTS.length;
+    return ISEKAI_SLOTS.length;
   };
   const keepX = rank(x) <= rank(y);
   const base = keepX ? x : y;
@@ -116,8 +116,8 @@ export function mergeShogo(a, b) {
 
 // Same anime when the decoded sets share a slot and conflict on none.
 export function equivalent(a, b) {
-  const x = fromShogo(a);
-  const y = fromShogo(b);
+  const x = fromIsekai(a);
+  const y = fromIsekai(b);
   if (!x || !y) return false;
   let shared = false;
   for (const k of Object.keys(x)) {
@@ -128,8 +128,8 @@ export function equivalent(a, b) {
   return shared;
 }
 
-export function shogoKey(shogoId) {
-  const ids = fromShogo(shogoId);
+export function isekaiKey(isekaiId) {
+  const ids = fromIsekai(isekaiId);
   if (!ids) return null;
   return Object.keys(ids).sort().map((k) => k + ":" + ids[k]).join("|");
 }
@@ -172,9 +172,9 @@ export function coerceIds(input) {
   for (const key of Object.keys(input)) {
     const value = input[key];
     if (value == null || value === "") continue;
-    if (key === "shogo") {
-      const decoded = fromShogo(value);
-      if (!decoded) throw new InvalidIdError('Invalid shogo id: "' + value + '"');
+    if (key === "isekai") {
+      const decoded = fromIsekai(value);
+      if (!decoded) throw new InvalidIdError('Invalid isekai id: "' + value + '"');
       for (const k of Object.keys(decoded)) out[k] = decoded[k];
     } else if (key === "slug") {
       continue; // slugs are handled by parseId, not stored in ids
@@ -201,22 +201,22 @@ export function coerceIds(input) {
 }
 
 function parseBareDigits(raw) {
-  const decoded = fromShogo(raw);
+  const decoded = fromIsekai(raw);
   if (!decoded) {
     throw new InvalidIdError(
-      'Bare numbers are shogo ids, and "' + raw + '" is not a valid one (checksum/shape). ' +
+      'Bare numbers are isekai ids, and "' + raw + '" is not a valid one (checksum/shape). ' +
         'For MyAnimeList ids use "mal:' + raw + '" or { mal: ' + raw + " }."
     );
   }
-  return { kind: "shogo", shogo: raw, ids: decoded };
+  return { kind: "isekai", isekai: raw, ids: decoded };
 }
 
-// Any accepted id form -> { kind: "shogo" | "ids" | "slug", ... }
+// Any accepted id form -> { kind: "isekai" | "ids" | "slug", ... }
 export function parseId(input) {
   if (input == null) throw new InvalidIdError("Missing id");
   if (typeof input === "object") {
     if (Array.isArray(input)) throw new InvalidIdError("Arrays are not ids; pass one id or use findByIds([...])");
-    if (input.shogo != null) return parseId(input.shogo);
+    if (input.isekai != null) return parseId(input.isekai);
     if (input.slug != null) {
       const slug = slugify(input.slug);
       if (!slug) throw new InvalidIdError("Cannot slugify: " + JSON.stringify(input.slug));
@@ -238,7 +238,7 @@ export function parseId(input) {
   if (colon > 0) {
     const ns = raw.slice(0, colon).toLowerCase();
     const rest = raw.slice(colon + 1);
-    if (ns === "shogo") return parseBareDigits(rest);
+    if (ns === "isekai") return parseBareDigits(rest);
     if (ns === "slug") {
       const slug = slugify(rest);
       if (!slug) throw new InvalidIdError("Cannot slugify: " + raw);

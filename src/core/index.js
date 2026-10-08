@@ -1,4 +1,4 @@
-// shogo-anime/core — the client internals without providers.
+// @ainzoal/isekai/core — the client internals without providers.
 
 export * from "./errors.js";
 export * from "./ids.js";

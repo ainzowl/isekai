@@ -1,8 +1,9 @@
 {
-  "name": "shogo-anime",
+  "name": "@ainzoal/isekai",
   "version": "0.1.0",
   "description": "One clean interface over every anime service — metadata, IDs, images, seasons, episodes and skip times from Jikan, Kitsu, AniList, animap.id, TMDB, AniSkip and Anime Skip. Zero dependencies.",
   "keywords": [
+    "isekai",
     "anime",
     "anilist",
     "myanimelist",
@@ -58,17 +59,20 @@
   ],
   "scripts": {
     "test": "node --test test/*.test.js",
-    "test:live": "sh -c \"SHOGO_LIVE=1 node --test test/*.test.js\"",
+    "test:live": "sh -c \"ISEKAI_LIVE=1 node --test test/*.test.js\"",
     "lint": "node scripts/lint.mjs",
     "docs": "node docs/serve.mjs"
   },
   "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ainzowl/shogo.git"
+    "url": "git+https://github.com/ainzowl/isekai.git"
   },
-  "homepage": "https://github.com/ainzowl/shogo",
+  "homepage": "https://github.com/ainzowl/isekai",
   "bugs": {
-    "url": "https://github.com/ainzowl/shogo/issues"
+    "url": "https://github.com/ainzowl/isekai/issues"
   }
 }

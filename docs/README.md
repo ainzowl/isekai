@@ -1,8 +1,8 @@
-# shogo docs
+# isekai docs
 
 - `documentation/` — usage guide.
-- `examples/` — live playground: runs real shogo code in the browser.
-- `shogo/` — AniList-style browse app (`shogo.html` + `shogo.js`).
+- `examples/` — live playground: runs real isekai code in the browser.
+- `isekai/` — AniList-style browse app (`isekai.html` + `isekai.js`).
 
 ```sh
 npm run docs                  # http://localhost:8787

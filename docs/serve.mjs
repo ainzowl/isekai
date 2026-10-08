@@ -6,7 +6,7 @@
 //   node docs/serve.mjs 4000       -> custom port
 //   node docs/serve.mjs --check    -> self-test (pages + proxy round-trip), exit 0/1
 //
-// Backend mode: `new Shogo({ proxy: "/api/proxy" })` routes every provider call
+// Backend mode: `new Isekai({ proxy: "/api/proxy" })` routes every provider call
 // through /api/proxy?url=... so the *server* talks to the APIs. Only known
 // provider hosts are proxied; TMDB/Anime Skip keys can live in the server env
 // (TMDB_API_KEY, ANIME_SKIP_CLIENT_ID) instead of the browser.
@@ -62,7 +62,7 @@ export function createDocsServer(options = {}) {
   const root = normalize(options.root || join(here, ".."));
   const env = options.env || process.env;
   const allowedHosts = new Set(options.allowedHosts || DEFAULT_PROXY_HOSTS);
-  for (const extra of String(env.SHOGO_PROXY_HOSTS || "").split(",")) {
+  for (const extra of String(env.ISEKAI_PROXY_HOSTS || "").split(",")) {
     if (extra.trim()) allowedHosts.add(extra.trim());
   }
   const upstreamFetch = options.fetch || ((...args) => fetch(...args));
@@ -189,11 +189,11 @@ if (isMain) {
   } else {
     const port = Number(arg);
     createDocsServer().listen(port, () => {
-      console.log("shogo docs server");
+      console.log("isekai docs server");
       console.log("  landing      http://localhost:" + port + "/docs/");
       console.log("  docs         http://localhost:" + port + "/docs/documentation/");
       console.log("  playground   http://localhost:" + port + "/docs/examples/");
-      console.log("  shogo app    http://localhost:" + port + "/docs/shogo/shogo.html");
+      console.log("  isekai app    http://localhost:" + port + "/docs/isekai/isekai.html");
       console.log("  api proxy    http://localhost:" + port + "/api/proxy?url=<encoded>");
     });
   }
@@ -211,8 +211,8 @@ async function runChecks() {
     ["/docs/", 200],
     ["/docs/documentation/", 200],
     ["/docs/examples/", 200],
-    ["/docs/shogo/shogo.html", 200],
-    ["/docs/shogo/shogo.js", 200],
+    ["/docs/isekai/isekai.html", 200],
+    ["/docs/isekai/isekai.js", 200],
     ["/src/index.js", 200],
     ["/src/core/ids.js", 200],
   ];
@@ -228,7 +228,7 @@ async function runChecks() {
     const target = encodeURIComponent(base + "/docs/README.md");
     const res = await fetch(base + "/api/proxy?url=" + target);
     const text = await res.text();
-    const ok = res.status === 200 && text.indexOf("# shogo docs") >= 0;
+    const ok = res.status === 200 && text.indexOf("# isekai docs") >= 0;
     if (!ok) failures++;
     console.log((ok ? "ok   " : "FAIL ") + res.status + "  /api/proxy (static round-trip)");
   } catch (err) {

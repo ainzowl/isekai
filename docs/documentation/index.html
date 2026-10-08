@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Documentation — shogo</title>
+  <title>Documentation — isekai</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌀</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Overpass:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -50,13 +50,13 @@
       <span class="grid h-7 w-7 place-items-center rounded-lg bg-brand/15 text-brand ring-1 ring-brand/30">
         <i data-lucide="orbit" class="h-4 w-4"></i>
       </span>
-      shogo <span class="text-slate-500">docs</span>
+      isekai <span class="text-slate-500">docs</span>
     </a>
     <nav class="flex items-center gap-2 text-sm">
       <a class="rounded-lg px-3 py-1.5 hover:bg-ink-800 hover:text-white" href="../examples/">
         <i data-lucide="square-terminal" class="mr-1 inline h-3.5 w-3.5 text-brand"></i> playground
       </a>
-      <a class="rounded-lg bg-brand px-3 py-1.5 font-medium text-ink-950 hover:bg-brand-dark" href="../shogo/shogo.html">
+      <a class="rounded-lg bg-brand px-3 py-1.5 font-medium text-ink-950 hover:bg-brand-dark" href="../isekai/isekai.html">
         open the app
       </a>
     </nav>
@@ -84,16 +84,16 @@
     <div class="mt-6 rounded-xl border border-ink-700 bg-ink-900 p-3 text-xs text-slate-400">
       <i data-lucide="lightbulb" class="mb-1 h-4 w-4 text-brand"></i>
       Prefer to poke at it? The <a class="text-brand hover:underline" href="../examples/">playground</a>
-      runs real shogo code against the live APIs.
+      runs real isekai code against the live APIs.
     </div>
   </aside>
 
   <!-- content -->
   <main class="prose-doc min-w-0 max-w-3xl flex-1 py-10">
-    <p class="text-xs uppercase tracking-widest text-brand">shogo v0.1.0</p>
+    <p class="text-xs uppercase tracking-widest text-brand">isekai v0.1.0</p>
     <h1 class="mt-1 font-display text-3xl font-extrabold text-white md:text-4xl">Documentation</h1>
     <p class="mt-3 text-slate-400">
-      shogo is a zero-dependency ES module that fans out to Jikan (MyAnimeList),
+      isekai is a zero-dependency ES module that fans out to Jikan (MyAnimeList),
       Kitsu, AniList, animap.id, TMDB, AniSkip and Anime Skip, then merges everything into
       a single canonical shape. Source, docs and tests live in the same repository.
     </p>
@@ -101,10 +101,10 @@
     <section class="mt-12">
       <h2 id="install" class="font-display text-2xl font-bold text-white">Install</h2>
       <div data-code class="code mt-4 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
-        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>npm install shogo-anime
+        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>npm install @ainzoal/isekai
 
 # or just import the source in this repo — it is plain ESM:
-# import { Shogo } from "./src/index.js"</code></pre>
+# import { Isekai } from "./src/index.js"</code></pre>
       </div>
       <p class="mt-3 text-sm text-slate-400">
         Node 18+ works out of the box. Bun, Deno, browsers and embedded runtimes
@@ -116,19 +116,19 @@
     <section class="mt-12">
       <h2 id="quickstart" class="font-display text-2xl font-bold text-white">Quick start</h2>
       <div data-code class="code mt-4 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
-        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>import { Shogo } from "shogo-anime";
+        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>import { Isekai } from "@ainzoal/isekai";
 
-const shogo = new Shogo(); // Jikan, Kitsu, AniList, animap.id need no keys
+const isekai = new Isekai(); // Jikan, Kitsu, AniList, animap.id need no keys
 
-const anime = await shogo.findById("mal:21");
+const anime = await isekai.findById("mal:21");
 anime.titles.romaji;   // "ONE PIECE"
-anime.ids.shogo;       // "12000000210000002117"  (packed MAL + AniList + Kitsu id)
+anime.ids.isekai;       // "12000000210000002117"  (packed MAL + AniList + Kitsu id)
 anime.sources;         // ["jikan", "anilist", "kitsu", "animap"] — who contributed
 anime.meta;            // { durationMs, cacheHits, coalesced, ... }
 
-await shogo.findById(2105);          // bare ids are shogo ids
-await shogo.findById("one-piece");   // bare text is a slug
-await shogo.findById("tt0388629");   // IMDb ids welcome</code></pre>
+await isekai.findById(2105);          // bare ids are isekai ids
+await isekai.findById("one-piece");   // bare text is a slug
+await isekai.findById("tt0388629");   // IMDb ids welcome</code></pre>
       </div>
       <p class="mt-3 text-sm text-slate-400">
         Only TMDB (images/stills, IMDb+TVDB bridge) and Anime Skip (optional
@@ -143,14 +143,14 @@ await shogo.findById("tt0388629");   // IMDb ids welcome</code></pre>
         no provider JSON parsing on your side:
       </p>
       <div data-code class="code mt-4 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
-        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>const anime = await shogo.findById("mal:21");
+        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>const anime = await isekai.findById("mal:21");
 
-anime.ids;          // { mal, anilist, kitsu, anidb, ann, tvdb, tmdb, imdb, shogo, ... }
+anime.ids;          // { mal, anilist, kitsu, anidb, ann, tvdb, tmdb, imdb, isekai, ... }
 anime.titles;       // { romaji, english, native, synonyms, localized }
 anime.slug;         // "one-piece"  (+ anime.slugs for native provider slugs)
 anime.episodes;     // 1184        durationSec, season { season, year }, aired { from, to }
 anime.ratings;      // { mal: { score, votes, ... }, anilist: {...}, kitsu: {...} }
-anime.score;        // 8.55 — shogo score: the average of every provider score, normalized 0–10
+anime.score;        // 8.55 — isekai score: the average of every provider score, normalized 0–10
 anime.images;       // { posters, banners, logos, thumbnails, stills } (each with .source)
 anime.links;        // { official, streaming: [{ service, url, dub, subs }], external }
 anime.relations;    // [{ type: "SEQUEL", ids, title, format }]
@@ -171,18 +171,18 @@ anime.fieldSources; // { synopsis: "anilist", "titles.romaji": "jikan", ... }</c
 
     <section class="mt-12">
       <h2 id="ids" class="font-display text-2xl font-bold text-white">IDs</h2>
-      <h3 class="mt-6 font-display text-lg font-semibold text-white">Packed shogo IDs (no database)</h3>
+      <h3 class="mt-6 font-display text-lg font-semibold text-white">Packed isekai IDs (no database)</h3>
       <p class="mt-2 text-sm text-slate-400">
-        A shogo ID packs the MAL, AniList and Kitsu ids into one checksummed
+        A isekai ID packs the MAL, AniList and Kitsu ids into one checksummed
         number. Decoding is pure math — zero network, zero cache.
       </p>
       <div data-code class="code mt-4 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
-        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>shogo.ids.toShogo({ mal: 21 });                        // "2105"
-shogo.ids.toShogo({ mal: 21, anilist: 21, kitsu: 12 }); // "12000000210000002117"
-shogo.ids.fromShogo("2105");                           // { mal: 21 }
-shogo.ids.fromShogo("2106");                           // null — checksum rejects typos
-shogo.ids.equivalent("2105", "12000000210000002117");  // true (id-set intersection)
-shogo.ids.merge("2105", "12000000210000002117");       // { ids, conflicts: [] }</code></pre>
+        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>isekai.ids.toIsekai({ mal: 21 });                        // "2105"
+isekai.ids.toIsekai({ mal: 21, anilist: 21, kitsu: 12 }); // "12000000210000002117"
+isekai.ids.fromIsekai("2105");                           // { mal: 21 }
+isekai.ids.fromIsekai("2106");                           // null — checksum rejects typos
+isekai.ids.equivalent("2105", "12000000210000002117");  // true (id-set intersection)
+isekai.ids.merge("2105", "12000000210000002117");       // { ids, conflicts: [] }</code></pre>
       </div>
       <p class="mt-3 text-sm text-slate-400">
         Store populated ids as <strong>strings</strong> — they exceed
@@ -194,7 +194,7 @@ shogo.ids.merge("2105", "12000000210000002117");       // { ids, conflicts: [] }
       <table class="doc mt-3">
         <thead><tr><th>Input</th><th>Treated as</th></tr></thead>
         <tbody>
-          <tr><td><code>2105</code></td><td>shogo id</td></tr>
+          <tr><td><code>2105</code></td><td>isekai id</td></tr>
           <tr><td><code>21</code></td><td><code>InvalidIdError</code>, with a <code>"mal:21"</code> hint</td></tr>
           <tr><td><code>"mal:21"</code>, <code>{ mal: 21 }</code></td><td>provider id</td></tr>
           <tr><td><code>"tmdb:tv:37854"</code></td><td>TMDB id (type-aware)</td></tr>
@@ -207,9 +207,9 @@ shogo.ids.merge("2105", "12000000210000002117");       // { ids, conflicts: [] }
     <section class="mt-12">
       <h2 id="slugs" class="font-display text-2xl font-bold text-white">Slugs</h2>
       <div data-code class="code mt-4 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
-        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>shogo.ids.slugify("Bocchi the Rock!"); // "bocchi-the-rock"
+        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>isekai.ids.slugify("Bocchi the Rock!"); // "bocchi-the-rock"
 
-const match = await shogo.findBySlug("one-piece");
+const match = await isekai.findBySlug("one-piece");
 // resolution order: native Kitsu slug (1 exact request) -> loaded catalog index
 //                   -> identify() at a higher threshold
 match.best.ids;        // { kitsu: 12, ... }
@@ -234,7 +234,7 @@ match.best.confidence; // 1</code></pre>
           <tr><td><code>characters(ref)</code> / <code>staff(ref)</code></td><td>cast + voice actors / staff</td></tr>
           <tr><td><code>relations(ref)</code> / <code>franchise(ref)</code> / <code>recommendations(ref)</code> / <code>schedule()</code></td><td>grouped relations / ordered timeline / recs / airing</td></tr>
           <tr><td><code>resolve(ref, { to })</code> / <code>map(ref)</code> / <code>findByExternalId(p, id)</code></td><td><code>MappingResult</code> with <code>ids</code>, <code>conflicts</code>, <code>missing</code></td></tr>
-          <tr><td><code>catalog({ source })</code></td><td>titles ↔ shogo ids: <code>list()</code>, <code>search()</code>, <code>bySlug()</code>, <code>byShogoId()</code></td></tr>
+          <tr><td><code>catalog({ source })</code></td><td>titles ↔ isekai ids: <code>list()</code>, <code>search()</code>, <code>bySlug()</code>, <code>byIsekaiId()</code></td></tr>
           <tr><td><code>stats()</code>, <code>providers.*</code>, <code>mapping.conflicts(ref)</code>, <code>raw.*</code></td><td>introspection &amp; escape hatches</td></tr>
         </tbody>
       </table>
@@ -243,7 +243,7 @@ match.best.confidence; // 1</code></pre>
     <section class="mt-12">
       <h2 id="options" class="font-display text-2xl font-bold text-white">Options</h2>
       <div data-code class="code mt-4 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
-        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>const shogo = new Shogo({
+        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>const isekai = new Isekai({
   keys: { tmdb: "...", "anime-skip": "..." }, // only used when needed
   providers: ["jikan", "kitsu", "anilist", "animap"], // hard allow-list (also for search)
   defaultSource: "kitsu",     // kitsu | jikan | anilist — leads the merge + episode defaults
@@ -259,8 +259,8 @@ match.best.confidence; // 1</code></pre>
 });
 
 // per call:
-await shogo.findById("mal:21", {
-  include: ["titles", "ids.shogo"],   // dotted selectors, prune the provider plan
+await isekai.findById("mal:21", {
+  include: ["titles", "ids.isekai"],   // dotted selectors, prune the provider plan
   exclude: ["relations"],
   dryRun: true,                        // return the call plan, fetch nothing
   cache: "bypass",
@@ -299,9 +299,9 @@ await shogo.findById("mal:21", {
       </div>
       <h3 class="mt-6 font-display text-lg font-semibold text-white">Catalog &amp; offline mode</h3>
       <div data-code class="code mt-3 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
-        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>shogo.offline.load(animapDumpJson);   // the animap.id bulk dump (~50 MB), user-provided
-const cat = await shogo.catalog();    // snapshot backend: zero network
-cat.byShogoId(2105); cat.bySlug("one-piece"); cat.search("one piece");
+        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>isekai.offline.load(animapDumpJson);   // the animap.id bulk dump (~50 MB), user-provided
+const cat = await isekai.catalog();    // snapshot backend: zero network
+cat.byIsekaiId(2105); cat.bySlug("one-piece"); cat.search("one piece");
 for await (const entry of cat.list()) { /* CatalogEntry */ }</code></pre>
       </div>
     </section>
@@ -309,13 +309,13 @@ for await (const entry of cat.list()) { /* CatalogEntry */ }</code></pre>
     <section class="mt-12">
       <h2 id="episodes" class="font-display text-2xl font-bold text-white">Episodes &amp; skip times</h2>
       <div data-code class="code mt-4 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
-        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>const seasons = await shogo.seasons("mal:21");
-const eps = await shogo.episodes("mal:21");                                   // kitsu (default source)
-const all = await shogo.episodes("mal:21", { providers: ["jikan", "kitsu", "tmdb"] });
+        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>const seasons = await isekai.seasons("mal:21");
+const eps = await isekai.episodes("mal:21");                                   // kitsu (default source)
+const all = await isekai.episodes("mal:21", { providers: ["jikan", "kitsu", "tmdb"] });
 // every episode carries `refs` (each provider's own numbering) and the list
 // carries `consolidated` { providers, total, matched, unmatched }
 
-const ctx = await shogo.episode("mal:21", { season: 1, number: 1, providers: ["jikan", "kitsu"] });
+const ctx = await isekai.episode("mal:21", { season: 1, number: 1, providers: ["jikan", "kitsu"] });
 // ctx.anime    -> the full merged Anime
 // ctx.season   -> which Season it belongs to
 // ctx.episode  -> number/title/air date/thumbnails
@@ -323,7 +323,7 @@ const ctx = await shogo.episode("mal:21", { season: 1, number: 1, providers: ["j
 // ctx.images   -> stills/screenshots
 
 // Apply the branding offset for the service you actually watch on:
-await shogo.skipTimes("mal:21", { number: 1, serviceUrl: "https://www.crunchyroll.com/..." });</code></pre>
+await isekai.skipTimes("mal:21", { number: 1, serviceUrl: "https://www.crunchyroll.com/..." });</code></pre>
       </div>
       <p class="mt-3 text-sm text-slate-400">
         <strong>Consolidation:</strong> flat lists and season 1 align on the episode number;
@@ -356,7 +356,7 @@ await shogo.skipTimes("mal:21", { number: 1, serviceUrl: "https://www.crunchyrol
         <li><strong>Observability</strong>: hooks, <code class="inline">result.meta</code>, <code class="inline">dryRun</code> plans, <code class="inline">stats()</code>.</li>
       </ul>
       <div data-code class="code mt-4 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
-        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>const shogo = new Shogo({
+        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>const isekai = new Isekai({
   hooks: {
     onRequest:  (e) =&gt; log.debug(e.provider, e.url),          // urls are redacted
     onResponse: (e) =&gt; metrics.observe(e.provider, e.durationMs),
@@ -364,10 +364,10 @@ await shogo.skipTimes("mal:21", { number: 1, serviceUrl: "https://www.crunchyrol
   },
 });
 
-await shogo.findById("mal:21", { dryRun: true });
+await isekai.findById("mal:21", { dryRun: true });
 // { plan: [{ provider: "jikan", native: { kind: "mal", id: 21 } }, ...] }
 
-shogo.stats(); // http counters, cache hits, limiter waits, breaker states</code></pre>
+isekai.stats(); // http counters, cache hits, limiter waits, breaker states</code></pre>
       </div>
     </section>
 
@@ -375,30 +375,30 @@ shogo.stats(); // http counters, cache hits, limiter waits, breaker states</code
       <h2 id="runtime" class="font-display text-2xl font-bold text-white">Runtime support</h2>
       <p class="mt-3 text-sm text-slate-400">
         All network traffic goes through one replaceable function
-        (<code class="inline">new Shogo({ fetch })</code>); there are no
+        (<code class="inline">new Isekai({ fetch })</code>); there are no
         <code class="inline">node:</code> imports and no assumptions about
         <code class="inline">URL</code>, timers or <code class="inline">AbortController</code>.
       </p>
       <div data-code class="code mt-4 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
         <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>// QuickJS-ng / React Native / anywhere without a global fetch:
-import { Shogo } from "shogo-anime";
+import { Isekai } from "@ainzoal/isekai";
 import { fetch } from "your-host-fetch-binding";
 
-const shogo = new Shogo({
+const isekai = new Isekai({
   fetch,
   clock: { now: () =&gt; Date.now(), sleep: (ms) =&gt; hostSleep(ms) }, // only if timers are missing
 });</code></pre>
       </div>
       <p class="mt-3 text-sm text-slate-400">
-        Subpaths: <code class="inline">shogo-anime/ids</code> (pure, ~2 KB),
-        <code class="inline">shogo-anime/core</code>,
-        <code class="inline">shogo-anime/testing</code> (mock fetch for your own tests).
+        Subpaths: <code class="inline">@ainzoal/isekai/ids</code> (pure, ~2 KB),
+        <code class="inline">@ainzoal/isekai/core</code>,
+        <code class="inline">@ainzoal/isekai/testing</code> (mock fetch for your own tests).
         Browser CORS is verified open (<code class="inline">*</code>) for Kitsu, AniList,
         animap.id, TMDB and Anime Skip; Jikan is browser-friendly too.
       </p>
       <p class="mt-3 text-sm text-slate-400">
-        <strong>Backend mode:</strong> <code class="inline">new Shogo({ proxy: "/api/proxy" })</code> routes
-        every provider call through your server (<code class="inline">shogo.transport === "backend"</code>),
+        <strong>Backend mode:</strong> <code class="inline">new Isekai({ proxy: "/api/proxy" })</code> routes
+        every provider call through your server (<code class="inline">isekai.transport === "backend"</code>),
         so the browser only talks to your backend. The docs server implements a hardened proxy
         (host allow-list, body/header forwarding, server-side
         <code class="inline">TMDB_API_KEY</code> / <code class="inline">ANIME_SKIP_CLIENT_ID</code> injection);
@@ -408,7 +408,7 @@ const shogo = new Shogo({
 
     <section class="mt-12">
       <h2 id="attribution" class="font-display text-2xl font-bold text-white">Attribution &amp; licenses</h2>
-      <p class="mt-3 text-sm text-slate-400">shogo ships no data — everything is fetched at runtime and stays subject to upstream terms:</p>
+      <p class="mt-3 text-sm text-slate-400">isekai ships no data — everything is fetched at runtime and stays subject to upstream terms:</p>
       <ul class="mt-3 list-disc space-y-1.5 pl-5 text-sm text-slate-400">
         <li><strong>MyAnimeList / Jikan</strong> — unofficial API; self-hosting supported via <code class="inline">baseUrls.jikan</code>.</li>
         <li><strong>Kitsu</strong> and <strong>AniList</strong> — public APIs, rate limits apply.</li>
@@ -420,7 +420,7 @@ const shogo = new Shogo({
       </ul>
       <p class="mt-6 text-sm text-slate-400">
         Next: open the <a class="anchor" href="../examples/">live playground</a> or browse with the
-        <a class="anchor" href="../shogo/shogo.html">shogo app</a>.
+        <a class="anchor" href="../isekai/isekai.html">isekai app</a>.
       </p>
     </section>
   </main>

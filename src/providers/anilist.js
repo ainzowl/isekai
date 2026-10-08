@@ -188,7 +188,7 @@ export default {
   },
   defaults: { baseUrl: GQL, rate: { perMin: 30 } },
 
-  // Raw GraphQL passthrough for shogo.raw.anilist.
+  // Raw GraphQL passthrough for isekai.raw.anilist.
   gql(ctx, query, variables, opts) {
     return gql(ctx, query, variables, opts);
   },

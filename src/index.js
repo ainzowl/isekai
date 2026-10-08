@@ -1,8 +1,8 @@
-// shogo — one clean interface over every anime service.
+// isekai — one clean interface over every anime service.
 
-export { Shogo, createShogo } from "./client.js";
+export { Isekai, createIsekai } from "./client.js";
 export {
-  ShogoError,
+  IsekaiError,
   MissingApiKeyError,
   InvalidApiKeyError,
   InvalidIdError,

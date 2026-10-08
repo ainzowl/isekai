@@ -3,7 +3,7 @@ import { idsKey } from "../core/ids.js";
 function warn(message) {
   if (typeof console !== "undefined" && typeof console.warn === "function") {
     try {
-      console.warn("shogo: " + message);
+      console.warn("isekai: " + message);
     } catch (err) {
       /* never throw from a warning */
     }
