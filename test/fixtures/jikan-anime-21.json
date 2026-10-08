@@ -1,0 +1,51 @@
+{
+  "_note": "Synthetic fixture (Jikan was unreachable from the dev machine during research). Shape matches api.jikan.moe/v4/anime/21/full; values are accurate for MAL 21.",
+  "data": {
+    "mal_id": 21,
+    "url": "https://myanimelist.net/anime/21/One_Piece",
+    "images": {
+      "jpg": {
+        "image_url": "https://cdn.myanimelist.net/images/anime/6/73245.jpg",
+        "small_image_url": "https://cdn.myanimelist.net/images/anime/6/73245t.jpg",
+        "large_image_url": "https://cdn.myanimelist.net/images/anime/6/73245l.jpg"
+      },
+      "webp": {
+        "image_url": "https://cdn.myanimelist.net/images/anime/6/73245.webp",
+        "small_image_url": "https://cdn.myanimelist.net/images/anime/6/73245t.webp",
+        "large_image_url": "https://cdn.myanimelist.net/images/anime/6/73245l.webp"
+      }
+    },
+    "title": "One Piece",
+    "title_english": "One Piece",
+    "title_japanese": "ワンピース",
+    "title_synonyms": ["OP"],
+    "type": "TV",
+    "status": "Currently Airing",
+    "episodes": null,
+    "duration": "24 min per ep",
+    "rating": "PG-13 - Teens 13 or older",
+    "score": 8.73,
+    "scored_by": 2100000,
+    "rank": 51,
+    "popularity": 1,
+    "members": 2600000,
+    "favorites": 130000,
+    "synopsis": "Barely surviving in a barrel after passing through a terrible whirlpool at sea, carefree Monkey D. Luffy ends up aboard a ship under attack by fearsome pirates.",
+    "season": "fall",
+    "year": 1999,
+    "aired": { "from": "1999-10-20T00:00:00+00:00", "to": null },
+    "studios": [{ "name": "Toei Animation" }],
+    "producers": [{ "name": "Fuji TV" }, { "name": "TAP" }],
+    "licensors": [{ "name": "Funimation" }],
+    "genres": [{ "name": "Action" }, { "name": "Adventure" }, { "name": "Fantasy" }],
+    "themes": [{ "name": "Pirates" }],
+    "streaming": [{ "name": "Crunchyroll", "url": "http://www.crunchyroll.com/one-piece" }],
+    "external": [{ "name": "Official Site", "url": "https://one-piece.com/" }],
+    "relations": [
+      {
+        "relation": "Sequel",
+        "entry": [{ "mal_id": 44245, "type": "anime", "name": "One Piece Film: Red" }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "_note": "Synthetic fixture matching api.jikan.moe/v4/anime/21/episodes.",
+  "data": [
+    {
+      "mal_id": 1,
+      "title": "I'm Luffy! The Man Who Will Become the Pirate King!",
+      "aired": "1999-10-20T00:00:00+00:00",
+      "filler": false,
+      "recap": false
+    },
+    {
+      "mal_id": 2,
+      "title": "The Great Swordsman Zoro, the Pirate Hunter!",
+      "aired": "1999-11-17T00:00:00+00:00",
+      "filler": false,
+      "recap": false
+    }
+  ],
+  "pagination": { "last_visible_page": 1, "has_next_page": false }
+}

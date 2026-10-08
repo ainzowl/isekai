@@ -1,0 +1,57 @@
+{
+  "_note": "Synthetic fixture matching kitsu.io/api/edge/anime/12 (JSON:API with includes).",
+  "data": {
+    "id": "12",
+    "type": "anime",
+    "attributes": {
+      "slug": "one-piece",
+      "canonicalTitle": "One Piece",
+      "titles": { "en": "One Piece", "en_jp": "One Piece", "ja_jp": "ワンピース" },
+      "synonyms": ["OP"],
+      "subtype": "TV",
+      "status": "current",
+      "episodeCount": null,
+      "episodeLength": 24,
+      "startDate": "1999-10-20",
+      "endDate": null,
+      "synopsis": "Gold Roger was known as the Pirate King.",
+      "averageRating": "82.4",
+      "ratingRank": 120,
+      "popularityRank": 3,
+      "userCount": 900000,
+      "favoritesCount": 21000,
+      "ageRating": "PG",
+      "posterImage": {
+        "original": "https://media.kitsu.io/anime/poster_images/12/original.jpg",
+        "small": "https://media.kitsu.io/anime/poster_images/12/small.jpg",
+        "meta": { "dimensions": { "width": 390, "height": 554 } }
+      },
+      "coverImage": {
+        "original": "https://media.kitsu.io/anime/cover_images/12/original.jpg",
+        "small": "https://media.kitsu.io/anime/cover_images/12/small.jpg"
+      }
+    }
+  },
+  "included": [
+    {
+      "id": "21",
+      "type": "mappings",
+      "attributes": { "externalSite": "myanimelist/anime", "externalId": "21" }
+    },
+    {
+      "id": "1",
+      "type": "streamingLinks",
+      "attributes": {
+        "url": "https://www.crunchyroll.com/one-piece",
+        "subs": true,
+        "dubs": true,
+        "language": "en"
+      }
+    },
+    {
+      "id": "9",
+      "type": "categories",
+      "attributes": { "title": "Pirates", "slug": "pirates" }
+    }
+  ]
+}

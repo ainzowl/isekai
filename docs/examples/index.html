@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Live playground — shogo</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌀</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Overpass:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: { 950: "#0b1622", 900: "#151f2e", 850: "#182634", 800: "#1b2a41", 700: "#2b3546" },
+            brand: { DEFAULT: "#3db4f2", dark: "#2b8ec4" },
+          },
+          fontFamily: {
+            sans: ["Inter", "system-ui", "sans-serif"],
+            display: ["Overpass", "Inter", "system-ui", "sans-serif"],
+            mono: ["JetBrains Mono", "ui-monospace", "monospace"],
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    body { background: #0b1622; }
+    #editor { tab-size: 2; }
+    .json-key { color: #7dd3fc; }
+    .json-string { color: #86efac; }
+    .json-number { color: #fca5a5; }
+    .json-bool { color: #f0abfc; }
+    .json-null { color: #94a3b8; }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-thumb { background: #2b3546; border-radius: 8px; }
+  </style>
+</head>
+<body class="min-h-screen font-sans text-slate-300 antialiased">
+
+<header class="sticky top-0 z-30 border-b border-ink-700 bg-ink-950/90 backdrop-blur">
+  <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-3">
+    <a href="../" class="flex items-center gap-2 font-display text-lg font-extrabold text-white">
+      <span class="grid h-7 w-7 place-items-center rounded-lg bg-brand/15 text-brand ring-1 ring-brand/30">
+        <i data-lucide="orbit" class="h-4 w-4"></i>
+      </span>
+      shogo <span class="text-slate-500">playground</span>
+    </a>
+    <div class="flex items-center gap-2 text-sm">
+      <a class="rounded-lg px-3 py-1.5 hover:bg-ink-800 hover:text-white" href="../documentation/">
+        <i data-lucide="book-open" class="mr-1 inline h-3.5 w-3.5 text-brand"></i> docs
+      </a>
+      <a class="rounded-lg bg-brand px-3 py-1.5 font-medium text-ink-950 hover:bg-brand-dark" href="../shogo/shogo.html">
+        open the app
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="mx-auto max-w-7xl px-5 py-6">
+
+  <!-- settings bar -->
+  <section class="mb-5 rounded-2xl border border-ink-700 bg-ink-900 p-4">
+    <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">snippets</span>
+        <select id="snippet" class="rounded-lg border border-ink-700 bg-ink-950 px-3 py-1.5 text-sm text-white outline-none focus:border-brand"></select>
+      </div>
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">providers</span>
+        <div id="providers" class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"></div>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">keys</span>
+        <input id="key-tmdb" type="password" placeholder="TMDB key" class="w-36 rounded-lg border border-ink-700 bg-ink-950 px-2.5 py-1.5 text-xs outline-none focus:border-brand" />
+        <input id="key-skip" type="password" placeholder="Anime Skip client id" class="w-44 rounded-lg border border-ink-700 bg-ink-950 px-2.5 py-1.5 text-xs outline-none focus:border-brand" />
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">mode</span>
+        <label class="flex cursor-pointer items-center gap-1.5 text-sm text-slate-400 hover:text-white" title="Route every provider call through /api/proxy on the docs server">
+          <input id="mode-backend" type="checkbox" class="accent-sky-400" /> backend proxy
+        </label>
+      </div>
+      <div class="ml-auto flex items-center gap-2">
+        <span id="status" class="text-xs text-slate-500">ready</span>
+        <button id="run" class="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-ink-950 hover:bg-brand-dark">
+          <i data-lucide="play" class="h-4 w-4"></i> Run
+        </button>
+      </div>
+    </div>
+    <p class="mt-3 text-xs text-slate-500">
+      Real calls to the live APIs from your browser (CORS is open for all keyless providers).
+      Keys are kept in <code class="text-sky-300">localStorage</code> and never leave your machine.
+      The editor gets <code class="text-sky-300">shogo</code> (a configured client), <code class="text-sky-300">ids</code> (pure helpers) and <code class="text-sky-300">log()</code>.
+      With <strong>backend proxy</strong> checked, every call goes through <code class="text-sky-300">/api/proxy</code> on the
+      docs server instead of this browser — run it with <code class="text-sky-300">node docs/serve.mjs</code>.
+    </p>
+  </section>
+
+  <div class="grid gap-5 lg:grid-cols-12">
+    <!-- editor -->
+    <section class="lg:col-span-7">
+      <div class="overflow-hidden rounded-2xl border border-ink-700 bg-ink-900">
+        <div class="flex items-center justify-between border-b border-ink-700 px-4 py-2.5">
+          <span class="flex items-center gap-2 text-xs text-slate-500">
+            <i data-lucide="square-terminal" class="h-3.5 w-3.5"></i> editor — edit and press run
+          </span>
+          <button id="copy-code" class="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-slate-400 hover:bg-ink-800 hover:text-white">
+            <i data-lucide="copy" class="h-3.5 w-3.5"></i> copy code
+          </button>
+        </div>
+        <textarea id="editor" spellcheck="false"
+          class="h-[26rem] w-full resize-y bg-ink-950/60 p-4 font-mono text-[13px] leading-relaxed text-slate-200 outline-none"></textarea>
+      </div>
+    </section>
+
+    <!-- output -->
+    <section class="lg:col-span-5">
+      <div class="overflow-hidden rounded-2xl border border-ink-700 bg-ink-900">
+        <div class="flex items-center justify-between border-b border-ink-700 px-4 py-2.5">
+          <span class="flex items-center gap-2 text-xs text-slate-500">
+            <i data-lucide="braces" class="h-3.5 w-3.5"></i> output
+          </span>
+          <div class="flex items-center gap-1">
+            <button id="copy-out" class="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-slate-400 hover:bg-ink-800 hover:text-white">
+              <i data-lucide="copy" class="h-3.5 w-3.5"></i> copy output
+            </button>
+            <button id="clear-out" class="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-slate-400 hover:bg-ink-800 hover:text-white">
+              <i data-lucide="eraser" class="h-3.5 w-3.5"></i> clear
+            </button>
+          </div>
+        </div>
+        <div id="output" class="h-[26rem] overflow-auto p-4 font-mono text-[12.5px] leading-relaxed"></div>
+      </div>
+    </section>
+  </div>
+
+  <p class="mt-5 text-xs text-slate-600">
+    The playground imports the real package from <code>/src/index.js</code> — the same code you get from npm.
+    Add <code class="text-sky-300">?snippet=episode</code> to the URL to deep-link a snippet.
+  </p>
+</main>
+
+<script type="module">
+  import { Shogo, ids } from "../../src/index.js";
+  import { mockFetch } from "../../src/testing.js";
+
+  // ------------------------------------------------------------------ snippets
+  const SNIPPETS = {
+    findById: {
+      title: "findById — one merged record",
+      code: [
+        "// Fans out to Jikan + AniList + Kitsu + animap and merges everything.",
+        "const anime = await shogo.findById(\"mal:21\");",
+        "log(\"title:\", anime.titles.romaji);",
+        "log(\"shogo id:\", anime.ids.shogo);",
+        "log(\"sources:\", anime.sources.join(\", \"));",
+        "return anime;",
+      ].join("\n"),
+    },
+    search: {
+      title: "search + identify — which anime is this name?",
+      code: [
+        "const found = await shogo.search(\"bocchi the rock\", { limit: 5 });",
+        "log(\"results:\", found.results.length, \"| provider errors:\", found.errors.length);",
+        "",
+        "const guess = await shogo.identify(\"bocchi the rock\", { hint: { year: 2022 } });",
+        "log(\"best:\", guess.best && guess.best.titles.romaji, \"confidence:\", guess.best && guess.best.confidence);",
+        "log(\"why:\", guess.best && guess.best.reasons.join(\"; \"));",
+        "",
+        "return {",
+        "  search: found.results.slice(0, 3).map(r => ({ title: r.titles.romaji, mal: r.ids.mal, sources: r.sources })),",
+        "  best: guess.best,",
+        "};",
+      ].join("\n"),
+    },
+    episode: {
+      title: "episode context — anime + episode + skip + stills",
+      code: [
+        "const ctx = await shogo.episode(\"mal:21\", { season: 1, number: 1 });",
+        "log(\"anime:\", ctx.anime.titles.romaji);",
+        "log(\"episode:\", \"#\" + ctx.episode.number, ctx.episode.title);",
+        "log(\"skip:\", ctx.skip ? JSON.stringify(ctx.skip.op) : \"null — add an Anime Skip key above\");",
+        "return { season: ctx.season, episode: ctx.episode, skip: ctx.skip, images: ctx.images.slice(0, 3) };",
+      ].join("\n"),
+    },
+    ids: {
+      title: "packed IDs & slugs (no network)",
+      code: [
+        "// Pure math — runs instantly, no requests at all.",
+        "log(\"packed:\", ids.toShogo({ mal: 21, anilist: 21, kitsu: 12 }));",
+        "log(\"decoded:\", JSON.stringify(ids.fromShogo(\"2105\")));",
+        "log(\"typo ->\", ids.fromShogo(\"2106\"));",
+        "log(\"slug:\", ids.slugify(\"Bocchi the Rock!\"));",
+        "return {",
+        "  equivalent: ids.equivalent(\"2105\", \"12000000210000002117\"),",
+        "  merged: ids.mergeShogo(\"2105\", \"12000000210000002117\"),",
+        "};",
+      ].join("\n"),
+    },
+    mapping: {
+      title: "mapping — resolve any id to any id",
+      code: [
+        "const resolved = await shogo.resolve(\"mal:21\", { to: [\"anilist\", \"kitsu\", \"anidb\"] });",
+        "log(\"via:\", resolved.sources.join(\", \"));",
+        "log(\"missing:\", JSON.stringify(resolved.missing));",
+        "return resolved;",
+      ].join("\n"),
+    },
+    raw: {
+      title: "raw.anilist — full provider power",
+      code: [
+        "const media = await shogo.raw.anilist(",
+        "  \"query { Media(idMal: 21) { id idMal title { romaji english } episodes } }\"",
+        ");",
+        "log(\"title:\", media.Media.title.romaji);",
+        "return media;",
+      ].join("\n"),
+    },
+    introspection: {
+      title: "providers & stats introspection",
+      code: [
+        "log(\"configured:\", shogo.providers.configured().join(\", \"));",
+        "log(\"anilist capabilities:\", JSON.stringify(shogo.providers.capabilities(\"anilist\")));",
+        "const anime = await shogo.findById(\"mal:21\");",
+        "log(\"after one lookup, http stats:\");",
+        "return { http: shogo.stats().http, meta: anime.meta };",
+      ].join("\n"),
+    },
+    offline: {
+      title: "offline demo with mockFetch (zero network)",
+      code: [
+        "// This snippet ignores the configured client and builds a mocked one.",
+        "const fetchImpl = mockFetch([",
+        "  { url: (u) => u.includes(\"api.jikan.moe/v4/anime/21/full\"), reply: { body: { data: { mal_id: 21, title: \"One Piece\", type: \"TV\", synopsis: \"from a fixture\" } } } },",
+        "  { url: (u) => u.includes(\"animap.id\"), reply: { body: { sources: [\"https://myanimelist.net/anime/21\", \"https://kitsu.app/anime/12\"], title: \"One Piece\", type: \"TV\" } } },",
+        "  { url: (u) => u.includes(\"kitsu.io/api/edge/anime/12/mappings\"), reply: { body: { data: [] } } },",
+        "  { url: (u) => u.includes(\"kitsu.io/api/edge/anime/12\"), reply: { body: { data: { id: \"12\", type: \"anime\", attributes: { slug: \"one-piece\", canonicalTitle: \"One Piece\", subtype: \"TV\" } } } } },",
+        "]);",
+        "const mocked = new Shogo({ fetch: fetchImpl, providers: [\"jikan\", \"kitsu\", \"animap\"] });",
+        "const anime = await mocked.findById(\"mal:21\");",
+        "log(\"fetches served by the mock:\", fetchImpl.calls.length);",
+        "return anime;",
+      ].join("\n"),
+    },
+  };
+
+  // ------------------------------------------------------------------ settings
+  const $ = (id) => document.getElementById(id);
+  const stored = {
+    providers: JSON.parse(localStorage.getItem("shogo.providers") || "null"),
+    tmdb: localStorage.getItem("shogo.tmdb") || "",
+    skip: localStorage.getItem("shogo.skip") || "",
+  };
+  const ALL_PROVIDERS = ["jikan", "kitsu", "anilist", "animap", "tmdb", "anime-skip"];
+  const selected = new Set(stored.providers || ["jikan", "kitsu", "anilist", "animap"]);
+
+  const providerBox = $("providers");
+  for (const id of ALL_PROVIDERS) {
+    const label = document.createElement("label");
+    label.className = "flex cursor-pointer items-center gap-1.5 text-slate-400 hover:text-white";
+    label.innerHTML =
+      '<input type="checkbox" class="accent-sky-400" value="' + id + '"' +
+      (selected.has(id) ? " checked" : "") +
+      " /> " + id;
+    label.querySelector("input").addEventListener("change", (e) => {
+      if (e.target.checked) selected.add(id);
+      else selected.delete(id);
+      persist();
+    });
+    providerBox.appendChild(label);
+  }
+  $("key-tmdb").value = stored.tmdb;
+  $("key-skip").value = stored.skip;
+  $("mode-backend").checked = localStorage.getItem("shogo.mode") === "backend";
+  $("mode-backend").addEventListener("change", () => {
+    localStorage.setItem("shogo.mode", $("mode-backend").checked ? "backend" : "frontend");
+  });
+  $("key-tmdb").addEventListener("change", persist);
+  $("key-skip").addEventListener("change", persist);
+  function persist() {
+    localStorage.setItem("shogo.providers", JSON.stringify([...selected]));
+    localStorage.setItem("shogo.tmdb", $("key-tmdb").value.trim());
+    localStorage.setItem("shogo.skip", $("key-skip").value.trim());
+  }
+
+  // ------------------------------------------------------------------ snippets UI
+  const select = $("snippet");
+  for (const key of Object.keys(SNIPPETS)) {
+    const option = document.createElement("option");
+    option.value = key;
+    option.textContent = SNIPPETS[key].title;
+    select.appendChild(option);
+  }
+  const editor = $("editor");
+  const wanted = new URLSearchParams(location.search).get("snippet");
+  select.value = wanted && SNIPPETS[wanted] ? wanted : "findById";
+  editor.value = SNIPPETS[select.value].code;
+  select.addEventListener("change", () => {
+    editor.value = SNIPPETS[select.value].code;
+    history.replaceState(null, "", "?snippet=" + select.value);
+  });
+
+  // ------------------------------------------------------------------ output
+  const output = $("output");
+  function escapeHtml(text) {
+    return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  function renderJson(value, indent) {
+    const pad = indent || "";
+    if (value === null) return '<span class="json-null">null</span>';
+    if (typeof value === "string") return '<span class="json-string">' + escapeHtml(JSON.stringify(value)) + "</span>";
+    if (typeof value === "number") return '<span class="json-number">' + value + "</span>";
+    if (typeof value === "boolean") return '<span class="json-bool">' + value + "</span>";
+    if (Array.isArray(value)) {
+      if (!value.length) return "[]";
+      const inner = value.map((item) => pad + "  " + renderJson(item, pad + "  ")).join(",\n");
+      return "[\n" + inner + "\n" + pad + "]";
+    }
+    if (value && typeof value === "object") {
+      const keys = Object.keys(value);
+      if (!keys.length) return "{}";
+      const inner = keys
+        .map((key) => pad + '  <span class="json-key">"' + escapeHtml(key) + '"</span>: ' + renderJson(value[key], pad + "  "))
+        .join(",\n");
+      return "{\n" + inner + "\n" + pad + "}";
+    }
+    return escapeHtml(String(value));
+  }
+  function print(html, cls) {
+    const line = document.createElement("div");
+    line.className = "whitespace-pre-wrap break-words " + (cls || "text-slate-300");
+    line.innerHTML = html;
+    output.appendChild(line);
+    output.scrollTop = output.scrollHeight;
+  }
+  function logLine(args) {
+    print(args.map((a) => (typeof a === "string" ? escapeHtml(a) : renderJson(a))).join(" "), "text-slate-200");
+  }
+
+  // ------------------------------------------------------------------ run
+  const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+  async function run() {
+    output.innerHTML = "";
+    const button = $("run");
+    button.disabled = true;
+    button.classList.add("opacity-60");
+    $("status").textContent = "running…";
+    const started = performance.now();
+
+    const keys = {};
+    const tmdb = $("key-tmdb").value.trim();
+    const skip = $("key-skip").value.trim();
+    if (tmdb) keys.tmdb = tmdb;
+    if (skip) keys["anime-skip"] = skip;
+
+    const providers = [...selected].filter((id) => id !== "anime-skip");
+    const options = {
+      keys,
+      providers: providers.length ? providers : undefined,
+      timeoutMs: 12000,
+    };
+    if ($("mode-backend").checked) options.proxy = "/api/proxy";
+    const client = new Shogo(options);
+
+    try {
+      const fn = new AsyncFunction("shogo", "Shogo", "ids", "mockFetch", "log", editor.value);
+      const result = await fn(client, Shogo, ids, mockFetch, (...args) => logLine(args));
+      if (result !== undefined) {
+        print('<span class="text-slate-500">// return value</span>');
+        print(renderJson(result, ""));
+      }
+      const ms = Math.round(performance.now() - started);
+      $("status").textContent = "ok · " + ms + "ms";
+      print('<span class="text-emerald-400">// done in ' + ms + "ms</span>");
+    } catch (err) {
+      const ms = Math.round(performance.now() - started);
+      $("status").textContent = "error · " + ms + "ms";
+      print('<span class="text-red-400">' + escapeHtml((err && err.name) || "Error") + ": " + escapeHtml((err && err.message) || String(err)) + "</span>");
+      if (err && err.code) print('<span class="text-red-300/70">code: ' + escapeHtml(err.code) + "</span>");
+      if (err && err.url) print('<span class="text-slate-500">url: ' + escapeHtml(err.url) + "</span>");
+    } finally {
+      button.disabled = false;
+      button.classList.remove("opacity-60");
+      lucide.createIcons();
+    }
+  }
+  $("run").addEventListener("click", run);
+  editor.addEventListener("keydown", (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+      e.preventDefault();
+      run();
+    }
+    if (e.key === "Tab") {
+      e.preventDefault();
+      const start = editor.selectionStart;
+      editor.value = editor.value.slice(0, start) + "  " + editor.value.slice(editor.selectionEnd);
+      editor.selectionStart = editor.selectionEnd = start + 2;
+    }
+  });
+
+  async function withButton(button, text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      button.innerHTML = '<i data-lucide="check" class="h-3.5 w-3.5 text-emerald-400"></i> copied';
+    } catch (err) {
+      button.textContent = "copy failed";
+    }
+    lucide.createIcons();
+    setTimeout(() => {
+      button.innerHTML = '<i data-lucide="copy" class="h-3.5 w-3.5"></i> ' + (button.id === "copy-code" ? "copy code" : "copy output");
+      lucide.createIcons();
+    }, 1400);
+  }
+  $("copy-code").addEventListener("click", () => withButton($("copy-code"), editor.value));
+  $("copy-out").addEventListener("click", () => withButton($("copy-out"), output.innerText));
+  $("clear-out").addEventListener("click", () => {
+    output.innerHTML = "";
+  });
+
+  lucide.createIcons();
+</script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>shogo — one clean interface over every anime service</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌀</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Overpass:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: { 950: "#0b1622", 900: "#151f2e", 850: "#182634", 800: "#1b2a41", 700: "#2b3546" },
+            brand: { DEFAULT: "#3db4f2", dark: "#2b8ec4", dim: "#1a4c6e" },
+          },
+          fontFamily: {
+            sans: ["Inter", "system-ui", "sans-serif"],
+            display: ["Overpass", "Inter", "system-ui", "sans-serif"],
+            mono: ["JetBrains Mono", "ui-monospace", "monospace"],
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    body { background: radial-gradient(1200px 600px at 70% -10%, #1a4c6e33, transparent), #0b1622; }
+    .glow { box-shadow: 0 0 0 1px #3db4f21a, 0 20px 60px -30px #3db4f266; }
+  </style>
+</head>
+<body class="min-h-screen text-slate-300 font-sans antialiased">
+
+  <!-- top bar -->
+  <header class="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
+    <a href="./" class="flex items-center gap-2 font-display text-xl font-extrabold tracking-tight text-white">
+      <span class="grid h-8 w-8 place-items-center rounded-lg bg-brand/15 text-brand ring-1 ring-brand/30">
+        <i data-lucide="orbit" class="h-4 w-4"></i>
+      </span>
+      shogo
+      <span class="rounded-full bg-ink-800 px-2 py-0.5 text-[10px] font-medium text-slate-400 ring-1 ring-ink-700">v0.1.0</span>
+    </a>
+    <nav class="flex items-center gap-5 text-sm">
+      <a class="hover:text-white" href="./documentation/">documentation</a>
+      <a class="hover:text-white" href="./examples/">playground</a>
+      <a class="rounded-lg bg-brand px-3 py-1.5 font-medium text-ink-950 hover:bg-brand-dark" href="./shogo/shogo.html">
+        open the app
+      </a>
+    </nav>
+  </header>
+
+  <!-- hero -->
+  <main class="mx-auto max-w-6xl px-6">
+    <section class="py-14 text-center">
+      <p class="mx-auto mb-4 inline-flex items-center gap-2 rounded-full bg-ink-900 px-3 py-1 text-xs text-slate-400 ring-1 ring-ink-700">
+        <i data-lucide="sparkles" class="h-3.5 w-3.5 text-brand"></i>
+        zero dependencies · pure ESM · node · bun · deno · browsers · quickjs
+      </p>
+      <h1 class="mx-auto max-w-3xl font-display text-4xl font-extrabold leading-tight text-white md:text-6xl">
+        One clean interface over <span class="text-brand">every anime service</span>
+      </h1>
+      <p class="mx-auto mt-5 max-w-2xl text-slate-400 md:text-lg">
+        Metadata, images, packed IDs, slugs, seasons, episodes and skip times — from
+        Jikan, Kitsu, AniList, animap.id, TMDB and Anime Skip, merged into a single shape.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a href="./documentation/" class="inline-flex items-center gap-2 rounded-xl bg-brand px-5 py-2.5 font-medium text-ink-950 hover:bg-brand-dark">
+          <i data-lucide="book-open" class="h-4 w-4"></i> Read the docs
+        </a>
+        <a href="./examples/" class="inline-flex items-center gap-2 rounded-xl bg-ink-900 px-5 py-2.5 font-medium text-white ring-1 ring-ink-700 hover:bg-ink-800">
+          <i data-lucide="play" class="h-4 w-4 text-brand"></i> Try it live
+        </a>
+        <a href="./shogo/shogo.html" class="inline-flex items-center gap-2 rounded-xl bg-ink-900 px-5 py-2.5 font-medium text-white ring-1 ring-ink-700 hover:bg-ink-800">
+          <i data-lucide="compass" class="h-4 w-4 text-brand"></i> Browse anime
+        </a>
+      </div>
+    </section>
+
+    <!-- install snippet -->
+    <section class="mx-auto max-w-3xl">
+      <div class="glow overflow-hidden rounded-2xl bg-ink-900 ring-1 ring-ink-700">
+        <div class="flex items-center justify-between border-b border-ink-700 px-4 py-2.5">
+          <span class="flex items-center gap-2 text-xs text-slate-500">
+            <i data-lucide="terminal" class="h-3.5 w-3.5"></i> quick start
+          </span>
+          <button id="copy-hero" class="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-slate-400 hover:bg-ink-800 hover:text-white">
+            <i data-lucide="copy" class="h-3.5 w-3.5"></i> copy
+          </button>
+        </div>
+        <pre class="overflow-x-auto p-4 text-[13px] leading-relaxed font-mono"><code id="hero-code"><span class="text-slate-500">$</span> npm install shogo-anime
+
+<span class="text-fuchsia-300">import</span> { <span class="text-brand">Shogo</span> } <span class="text-fuchsia-300">from</span> <span class="text-emerald-300">"shogo-anime"</span>;
+
+<span class="text-fuchsia-300">const</span> shogo = <span class="text-fuchsia-300">new</span> <span class="text-brand">Shogo</span>();
+<span class="text-fuchsia-300">const</span> anime = <span class="text-fuchsia-300">await</span> shogo.<span class="text-sky-300">findById</span>(<span class="text-emerald-300">"mal:21"</span>);
+<span class="text-slate-500">// -&gt; { ids: { mal: 21, anilist: 21, kitsu: 12, shogo: "12000000210000002117", ... },</span>
+<span class="text-slate-500">//      titles: { romaji: "ONE PIECE", ... }, synopsis, images, sources: [...] }</span></code></pre>
+      </div>
+    </section>
+
+    <!-- feature cards -->
+    <section class="grid gap-4 py-14 md:grid-cols-3">
+      <a href="./documentation/" class="group rounded-2xl bg-ink-900 p-6 ring-1 ring-ink-700 transition hover:ring-brand/40">
+        <div class="mb-4 grid h-10 w-10 place-items-center rounded-xl bg-brand/10 text-brand ring-1 ring-brand/20">
+          <i data-lucide="book-open" class="h-5 w-5"></i>
+        </div>
+        <h2 class="font-display text-lg font-bold text-white">Documentation</h2>
+        <p class="mt-2 text-sm text-slate-400">
+          Install, the one shape, packed shogo IDs, slugs, methods, providers, keys,
+          caching, hooks, runtime notes and attribution.
+        </p>
+        <span class="mt-4 inline-flex items-center gap-1 text-sm text-brand">
+          read <i data-lucide="arrow-right" class="h-4 w-4 transition group-hover:translate-x-0.5"></i>
+        </span>
+      </a>
+      <a href="./examples/" class="group rounded-2xl bg-ink-900 p-6 ring-1 ring-ink-700 transition hover:ring-brand/40">
+        <div class="mb-4 grid h-10 w-10 place-items-center rounded-xl bg-brand/10 text-brand ring-1 ring-brand/20">
+          <i data-lucide="square-terminal" class="h-5 w-5"></i>
+        </div>
+        <h2 class="font-display text-lg font-bold text-white">Live playground</h2>
+        <p class="mt-2 text-sm text-slate-400">
+          Edit and run real shogo code in your browser against the live APIs.
+          Snippets for search, IDs, episodes and mapping — copy with one click.
+        </p>
+        <span class="mt-4 inline-flex items-center gap-1 text-sm text-brand">
+          try it <i data-lucide="arrow-right" class="h-4 w-4 transition group-hover:translate-x-0.5"></i>
+        </span>
+      </a>
+      <a href="./shogo/shogo.html" class="group rounded-2xl bg-ink-900 p-6 ring-1 ring-ink-700 transition hover:ring-brand/40">
+        <div class="mb-4 grid h-10 w-10 place-items-center rounded-xl bg-brand/10 text-brand ring-1 ring-brand/20">
+          <i data-lucide="compass" class="h-5 w-5"></i>
+        </div>
+        <h2 class="font-display text-lg font-bold text-white">The shogo app</h2>
+        <p class="mt-2 text-sm text-slate-400">
+          An AniList-flavoured browser: search anime, open a rich detail view,
+          inspect episodes and skip times — every action comes with the code to reproduce it.
+        </p>
+        <span class="mt-4 inline-flex items-center gap-1 text-sm text-brand">
+          browse <i data-lucide="arrow-right" class="h-4 w-4 transition group-hover:translate-x-0.5"></i>
+        </span>
+      </a>
+    </section>
+  </main>
+
+  <footer class="mx-auto max-w-6xl px-6 pb-10 pt-4 text-center text-xs text-slate-600">
+    shogo is MIT licensed. Provider data remains subject to its upstream terms —
+    AniDB (CC BY-NC-SA), ANN, TMDB (“not endorsed or certified by TMDB”), animap.id and Anime Skip.
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    const copyBtn = document.getElementById("copy-hero");
+    copyBtn.addEventListener("click", async () => {
+      const text = document.getElementById("hero-code").innerText;
+      try {
+        await navigator.clipboard.writeText(text);
+        copyBtn.innerHTML = '<i data-lucide="check" class="h-3.5 w-3.5 text-emerald-400"></i> copied';
+      } catch (err) {
+        copyBtn.textContent = "copy failed";
+      }
+      lucide.createIcons();
+      setTimeout(() => {
+        copyBtn.innerHTML = '<i data-lucide="copy" class="h-3.5 w-3.5"></i> copy';
+        lucide.createIcons();
+      }, 1600);
+    });
+  </script>
+</body>
+</html>

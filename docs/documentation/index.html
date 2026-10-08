@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Documentation — shogo</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌀</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Overpass:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: { 950: "#0b1622", 900: "#151f2e", 850: "#182634", 800: "#1b2a41", 700: "#2b3546" },
+            brand: { DEFAULT: "#3db4f2", dark: "#2b8ec4" },
+          },
+          fontFamily: {
+            sans: ["Inter", "system-ui", "sans-serif"],
+            display: ["Overpass", "Inter", "system-ui", "sans-serif"],
+            mono: ["JetBrains Mono", "ui-monospace", "monospace"],
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    body { background: #0b1622; }
+    .prose-doc h2 { scroll-margin-top: 90px; }
+    .prose-doc h3 { scroll-margin-top: 90px; }
+    .prose-doc a.anchor { color: #3db4f2; text-decoration: none; }
+    .prose-doc a.anchor:hover { text-decoration: underline; }
+    code.inline { background: #1b2a41; border: 1px solid #2b3546; border-radius: 6px; padding: 1px 6px; font-size: 12.5px; color: #7dd3fc; }
+    table.doc { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    table.doc th { text-align: left; color: #94a3b8; font-weight: 600; padding: 8px 10px; border-bottom: 1px solid #2b3546; }
+    table.doc td { padding: 8px 10px; border-bottom: 1px solid #1b2a41; vertical-align: top; }
+    table.doc td code { color: #7dd3fc; }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-thumb { background: #2b3546; border-radius: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+  </style>
+</head>
+<body class="min-h-screen font-sans text-slate-300 antialiased">
+
+<header class="sticky top-0 z-30 border-b border-ink-700 bg-ink-950/90 backdrop-blur">
+  <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-3">
+    <a href="../" class="flex items-center gap-2 font-display text-lg font-extrabold text-white">
+      <span class="grid h-7 w-7 place-items-center rounded-lg bg-brand/15 text-brand ring-1 ring-brand/30">
+        <i data-lucide="orbit" class="h-4 w-4"></i>
+      </span>
+      shogo <span class="text-slate-500">docs</span>
+    </a>
+    <nav class="flex items-center gap-2 text-sm">
+      <a class="rounded-lg px-3 py-1.5 hover:bg-ink-800 hover:text-white" href="../examples/">
+        <i data-lucide="square-terminal" class="mr-1 inline h-3.5 w-3.5 text-brand"></i> playground
+      </a>
+      <a class="rounded-lg bg-brand px-3 py-1.5 font-medium text-ink-950 hover:bg-brand-dark" href="../shogo/shogo.html">
+        open the app
+      </a>
+    </nav>
+  </div>
+</header>
+
+<div class="mx-auto flex max-w-7xl gap-10 px-5">
+  <!-- sidebar -->
+  <aside class="sticky top-16 hidden h-[calc(100vh-4rem)] w-56 shrink-0 overflow-y-auto py-8 lg:block">
+    <p class="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Documentation</p>
+    <nav id="toc" class="space-y-0.5 text-sm">
+      <a class="toc block rounded-lg px-3 py-1.5 text-slate-400 hover:bg-ink-800 hover:text-white" href="#install">Install</a>
+      <a class="toc block rounded-lg px-3 py-1.5 text-slate-400 hover:bg-ink-800 hover:text-white" href="#quickstart">Quick start</a>
+      <a class="toc block rounded-lg px-3 py-1.5 text-slate-400 hover:bg-ink-800 hover:text-white" href="#shape">The one shape</a>
+      <a class="toc block rounded-lg px-3 py-1.5 text-slate-400 hover:bg-ink-800 hover:text-white" href="#ids">IDs</a>
+      <a class="toc block rounded-lg px-3 py-1.5 text-slate-400 hover:bg-ink-800 hover:text-white" href="#slugs">Slugs</a>
+      <a class="toc block rounded-lg px-3 py-1.5 text-slate-400 hover:bg-ink-800 hover:text-white" href="#methods">Methods</a>
+      <a class="toc block rounded-lg px-3 py-1.5 text-slate-400 hover:bg-ink-800 hover:text-white" href="#options">Options</a>
+      <a class="toc block rounded-lg px-3 py-1.5 text-slate-400 hover:bg-ink-800 hover:text-white" href="#providers">Providers &amp; keys</a>
+      <a class="toc block rounded-lg px-3 py-1.5 text-slate-400 hover:bg-ink-800 hover:text-white" href="#episodes">Episodes &amp; skip times</a>
+      <a class="toc block rounded-lg px-3 py-1.5 text-slate-400 hover:bg-ink-800 hover:text-white" href="#resilience">Resilience &amp; hooks</a>
+      <a class="toc block rounded-lg px-3 py-1.5 text-slate-400 hover:bg-ink-800 hover:text-white" href="#runtime">Runtime support</a>
+      <a class="toc block rounded-lg px-3 py-1.5 text-slate-400 hover:bg-ink-800 hover:text-white" href="#attribution">Attribution</a>
+    </nav>
+    <div class="mt-6 rounded-xl border border-ink-700 bg-ink-900 p-3 text-xs text-slate-400">
+      <i data-lucide="lightbulb" class="mb-1 h-4 w-4 text-brand"></i>
+      Prefer to poke at it? The <a class="text-brand hover:underline" href="../examples/">playground</a>
+      runs real shogo code against the live APIs.
+    </div>
+  </aside>
+
+  <!-- content -->
+  <main class="prose-doc min-w-0 max-w-3xl flex-1 py-10">
+    <p class="text-xs uppercase tracking-widest text-brand">shogo v0.1.0</p>
+    <h1 class="mt-1 font-display text-3xl font-extrabold text-white md:text-4xl">Documentation</h1>
+    <p class="mt-3 text-slate-400">
+      shogo is a zero-dependency ES module that fans out to Jikan (MyAnimeList),
+      Kitsu, AniList, animap.id, TMDB, AniSkip and Anime Skip, then merges everything into
+      a single canonical shape. Source, docs and tests live in the same repository.
+    </p>
+
+    <section class="mt-12">
+      <h2 id="install" class="font-display text-2xl font-bold text-white">Install</h2>
+      <div data-code class="code mt-4 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
+        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>npm install shogo-anime
+
+# or just import the source in this repo — it is plain ESM:
+# import { Shogo } from "./src/index.js"</code></pre>
+      </div>
+      <p class="mt-3 text-sm text-slate-400">
+        Node 18+ works out of the box. Bun, Deno, browsers and embedded runtimes
+        (QuickJS-ng, React Native) work too — see <a class="anchor" href="#runtime">Runtime support</a>.
+        TypeScript needs only <code class="inline">lib: ["ES2020"]</code>; the package ships its own fetch types.
+      </p>
+    </section>
+
+    <section class="mt-12">
+      <h2 id="quickstart" class="font-display text-2xl font-bold text-white">Quick start</h2>
+      <div data-code class="code mt-4 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
+        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>import { Shogo } from "shogo-anime";
+
+const shogo = new Shogo(); // Jikan, Kitsu, AniList, animap.id need no keys
+
+const anime = await shogo.findById("mal:21");
+anime.titles.romaji;   // "ONE PIECE"
+anime.ids.shogo;       // "12000000210000002117"  (packed MAL + AniList + Kitsu id)
+anime.sources;         // ["jikan", "anilist", "kitsu", "animap"] — who contributed
+anime.meta;            // { durationMs, cacheHits, coalesced, ... }
+
+await shogo.findById(2105);          // bare ids are shogo ids
+await shogo.findById("one-piece");   // bare text is a slug
+await shogo.findById("tt0388629");   // IMDb ids welcome</code></pre>
+      </div>
+      <p class="mt-3 text-sm text-slate-400">
+        Only TMDB (images/stills, IMDb+TVDB bridge) and Anime Skip (optional
+        second skip source) need keys — skip times already work keyless via AniSkip.
+      </p>
+    </section>
+
+    <section class="mt-12">
+      <h2 id="shape" class="font-display text-2xl font-bold text-white">The one shape</h2>
+      <p class="mt-3 text-sm text-slate-400">
+        Every method returns the same normalized model and the same envelope —
+        no provider JSON parsing on your side:
+      </p>
+      <div data-code class="code mt-4 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
+        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>const anime = await shogo.findById("mal:21");
+
+anime.ids;          // { mal, anilist, kitsu, anidb, ann, tvdb, tmdb, imdb, shogo, ... }
+anime.titles;       // { romaji, english, native, synonyms, localized }
+anime.slug;         // "one-piece"  (+ anime.slugs for native provider slugs)
+anime.episodes;     // 1184        durationSec, season { season, year }, aired { from, to }
+anime.ratings;      // { mal: { score, votes, ... }, anilist: {...}, kitsu: {...} }
+anime.score;        // 8.55 — shogo score: the average of every provider score, normalized 0–10
+anime.images;       // { posters, banners, logos, thumbnails, stills } (each with .source)
+anime.links;        // { official, streaming: [{ service, url, dub, subs }], external }
+anime.relations;    // [{ type: "SEQUEL", ids, title, format }]
+
+anime.errors;       // [{ provider, code, message }] — partial failures, never thrown
+anime.skipped;      // [{ provider, reason: "no-key" | "not-found" | ... }]
+anime.meta;         // { durationMs, cacheHits, coalesced, providersQueried }
+anime.fieldSources; // { synopsis: "anilist", "titles.romaji": "jikan", ... }</code></pre>
+      </div>
+      <p class="mt-3 text-sm text-slate-400">
+        Array-returning methods (<code class="inline">episodes</code>,
+        <code class="inline">seasons</code>, <code class="inline">characters</code>,
+        <code class="inline">staff</code>, <code class="inline">franchise</code>) carry the envelope
+        on the array itself: <code class="inline">eps.errors</code>, <code class="inline">eps.sources</code>,
+        <code class="inline">eps.meta</code>.
+      </p>
+    </section>
+
+    <section class="mt-12">
+      <h2 id="ids" class="font-display text-2xl font-bold text-white">IDs</h2>
+      <h3 class="mt-6 font-display text-lg font-semibold text-white">Packed shogo IDs (no database)</h3>
+      <p class="mt-2 text-sm text-slate-400">
+        A shogo ID packs the MAL, AniList and Kitsu ids into one checksummed
+        number. Decoding is pure math — zero network, zero cache.
+      </p>
+      <div data-code class="code mt-4 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
+        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>shogo.ids.toShogo({ mal: 21 });                        // "2105"
+shogo.ids.toShogo({ mal: 21, anilist: 21, kitsu: 12 }); // "12000000210000002117"
+shogo.ids.fromShogo("2105");                           // { mal: 21 }
+shogo.ids.fromShogo("2106");                           // null — checksum rejects typos
+shogo.ids.equivalent("2105", "12000000210000002117");  // true (id-set intersection)
+shogo.ids.merge("2105", "12000000210000002117");       // { ids, conflicts: [] }</code></pre>
+      </div>
+      <p class="mt-3 text-sm text-slate-400">
+        Store populated ids as <strong>strings</strong> — they exceed
+        <code class="inline">Number.MAX_SAFE_INTEGER</code>. Missing slots are zeros;
+        leading empty slots are trimmed, so partial ids stay short.
+      </p>
+
+      <h3 class="mt-6 font-display text-lg font-semibold text-white">What counts as an id</h3>
+      <table class="doc mt-3">
+        <thead><tr><th>Input</th><th>Treated as</th></tr></thead>
+        <tbody>
+          <tr><td><code>2105</code></td><td>shogo id</td></tr>
+          <tr><td><code>21</code></td><td><code>InvalidIdError</code>, with a <code>"mal:21"</code> hint</td></tr>
+          <tr><td><code>"mal:21"</code>, <code>{ mal: 21 }</code></td><td>provider id</td></tr>
+          <tr><td><code>"tmdb:tv:37854"</code></td><td>TMDB id (type-aware)</td></tr>
+          <tr><td><code>"tt0388629"</code></td><td>IMDb id</td></tr>
+          <tr><td><code>"one-piece"</code>, <code>"slug:one-piece"</code>, <code>"One Piece"</code></td><td>slug (auto-slugified)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="mt-12">
+      <h2 id="slugs" class="font-display text-2xl font-bold text-white">Slugs</h2>
+      <div data-code class="code mt-4 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
+        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>shogo.ids.slugify("Bocchi the Rock!"); // "bocchi-the-rock"
+
+const match = await shogo.findBySlug("one-piece");
+// resolution order: native Kitsu slug (1 exact request) -> loaded catalog index
+//                   -> identify() at a higher threshold
+match.best.ids;        // { kitsu: 12, ... }
+match.best.confidence; // 1</code></pre>
+      </div>
+    </section>
+
+    <section class="mt-12">
+      <h2 id="methods" class="font-display text-2xl font-bold text-white">Methods</h2>
+      <table class="doc mt-4">
+        <thead><tr><th>Method</th><th>Returns</th></tr></thead>
+        <tbody>
+          <tr><td><code>findById(ref, opts?)</code> / <code>findByIds(refs)</code></td><td>merged <code>Anime</code></td></tr>
+          <tr><td><code>findBySlug(slug)</code></td><td><code>{ best, candidates, errors, meta }</code></td></tr>
+          <tr><td><code>search(query)</code> / <code>searchAll(query)</code></td><td>deduped results / async iterable per provider</td></tr>
+          <tr><td><code>identify(name, { hint, threshold, full })</code></td><td>best match + probability score + reasons</td></tr>
+          <tr><td><code>seasons(ref)</code></td><td><code>Season[]</code> — entry-based (MAL/AniList/Kitsu cours) or TMDB groups</td></tr>
+          <tr><td><code>episodes(ref, { season, providers })</code></td><td><code>EpisodeList</code> — defaults to the default source (kitsu); tagged providers are consolidated (each episode carries a per-provider <code>refs</code> map, plus matched/unmatched report)</td></tr>
+          <tr><td><code>episode(ref, { season, number })</code></td><td><code>EpisodeContext</code>: <code>{ anime, season, episode, skip, images }</code></td></tr>
+          <tr><td><code>images(ref)</code> / <code>screenshots(ref, { season, number })</code></td><td>posters/banners/logos / episode stills</td></tr>
+          <tr><td><code>skipTimes(ref, { number, skipProviders })</code></td><td>OP/ED/recap ranges — <strong>AniSkip</strong> by default (keyless), Anime Skip optional; <code>null</code> when nothing is stored</td></tr>
+          <tr><td><code>characters(ref)</code> / <code>staff(ref)</code></td><td>cast + voice actors / staff</td></tr>
+          <tr><td><code>relations(ref)</code> / <code>franchise(ref)</code> / <code>recommendations(ref)</code> / <code>schedule()</code></td><td>grouped relations / ordered timeline / recs / airing</td></tr>
+          <tr><td><code>resolve(ref, { to })</code> / <code>map(ref)</code> / <code>findByExternalId(p, id)</code></td><td><code>MappingResult</code> with <code>ids</code>, <code>conflicts</code>, <code>missing</code></td></tr>
+          <tr><td><code>catalog({ source })</code></td><td>titles ↔ shogo ids: <code>list()</code>, <code>search()</code>, <code>bySlug()</code>, <code>byShogoId()</code></td></tr>
+          <tr><td><code>stats()</code>, <code>providers.*</code>, <code>mapping.conflicts(ref)</code>, <code>raw.*</code></td><td>introspection &amp; escape hatches</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="mt-12">
+      <h2 id="options" class="font-display text-2xl font-bold text-white">Options</h2>
+      <div data-code class="code mt-4 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
+        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>const shogo = new Shogo({
+  keys: { tmdb: "...", "anime-skip": "..." }, // only used when needed
+  providers: ["jikan", "kitsu", "anilist", "animap"], // hard allow-list (also for search)
+  defaultSource: "kitsu",     // kitsu | jikan | anilist — leads the merge + episode defaults
+  baseUrls: { jikan: "https://my-jikan.internal/v4" },  // self-hosted Jikan
+  rateLimits: { anilist: { perMin: 25 } },
+  cache: "memory" | false | { get(k), set(k, v, ttlMs) },
+  timeoutMs: 10000,
+  proxy: "/api/proxy",        // backend mode: route every provider call through a server endpoint
+  concurrency: 4,
+  hooks: { onRequest, onResponse, onError },      // see Resilience
+  clock: { now, sleep },                          // for tests / tiny runtimes
+  fetch: myFetch,                                 // bring-your-own fetch
+});
+
+// per call:
+await shogo.findById("mal:21", {
+  include: ["titles", "ids.shogo"],   // dotted selectors, prune the provider plan
+  exclude: ["relations"],
+  dryRun: true,                        // return the call plan, fetch nothing
+  cache: "bypass",
+});</code></pre>
+      </div>
+    </section>
+
+    <section class="mt-12">
+      <h2 id="providers" class="font-display text-2xl font-bold text-white">Providers &amp; keys</h2>
+      <table class="doc mt-4">
+        <thead><tr><th>Provider</th><th>Key</th><th>Used for</th></tr></thead>
+        <tbody>
+          <tr><td>Kitsu</td><td>none</td><td>metadata, episodes (thumbnails), streaming flags, <strong>id mappings</strong>, native slugs — <strong>default source</strong></td></tr>
+          <tr><td>Jikan (MAL)</td><td>none</td><td>metadata, episodes, pictures, cast/staff, schedule (broken on some networks — select it with <code class="inline">defaultSource: "jikan"</code> when reachable)</td></tr>
+          <tr><td>Kitsu</td><td>none</td><td>metadata, episodes (thumbnails), streaming flags, <strong>id mappings</strong>, native slugs</td></tr>
+          <tr><td>AniList</td><td>none</td><td>metadata, relations, cast/staff, recommendations, schedule</td></tr>
+          <tr><td>animap.id</td><td>none</td><td>cross-id mapping (MAL/Kitsu/AniList/AniDB/ANN…), light metadata</td></tr>
+          <tr><td>IMDb</td><td>none</td><td>id namespace only; resolved through TMDB</td></tr>
+          <tr><td>TMDB</td><td><strong>required</strong></td><td>posters/backdrops/logos/<strong>episode stills</strong>, IMDb/TVDB/Wikidata bridge</td></tr>
+          <tr><td>AniSkip</td><td>none</td><td><strong>default skip times</strong> — keyless, MAL-based, real ranges (aniskip.com)</td></tr>
+          <tr><td>Anime Skip</td><td><strong>client id</strong> (optional)</td><td>OP/ED/recap/preview timestamps — must be an <strong>API client id</strong> (UUID) from anime-skip.com → account → API clients; the API reads only <code class="inline">X-Client-ID</code> (verified)</td></tr>
+        </tbody>
+      </table>
+      <p class="mt-3 text-sm text-slate-400">
+        Keyed providers throw an actionable <code class="inline">MissingApiKeyError</code>
+        when a method cannot be answered without them — and are skipped
+        (with <code class="inline">skipped: { reason: "no-key" }</code>) when they are optional.
+      </p>
+      <div class="mt-4 rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 text-sm text-amber-200/80">
+        <p class="font-medium text-amber-200"><i data-lucide="triangle-alert" class="mr-1 inline h-4 w-4"></i> Mapping caveat</p>
+        <p class="mt-1">There is no keyless MAL→TMDB bridge (Jikan/Kitsu/AniList don't carry
+        TMDB ids and animap deliberately doesn't either). TMDB joins a lookup when you pass
+        a <code class="inline">tmdb:</code>/<code class="inline">tt…</code>/<code class="inline">tvdb:</code> id —
+        or when you find the entry through <code class="inline">search()</code>/
+        <code class="inline">identify()</code>.</p>
+      </div>
+      <h3 class="mt-6 font-display text-lg font-semibold text-white">Catalog &amp; offline mode</h3>
+      <div data-code class="code mt-3 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
+        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>shogo.offline.load(animapDumpJson);   // the animap.id bulk dump (~50 MB), user-provided
+const cat = await shogo.catalog();    // snapshot backend: zero network
+cat.byShogoId(2105); cat.bySlug("one-piece"); cat.search("one piece");
+for await (const entry of cat.list()) { /* CatalogEntry */ }</code></pre>
+      </div>
+    </section>
+
+    <section class="mt-12">
+      <h2 id="episodes" class="font-display text-2xl font-bold text-white">Episodes &amp; skip times</h2>
+      <div data-code class="code mt-4 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
+        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>const seasons = await shogo.seasons("mal:21");
+const eps = await shogo.episodes("mal:21");                                   // kitsu (default source)
+const all = await shogo.episodes("mal:21", { providers: ["jikan", "kitsu", "tmdb"] });
+// every episode carries `refs` (each provider's own numbering) and the list
+// carries `consolidated` { providers, total, matched, unmatched }
+
+const ctx = await shogo.episode("mal:21", { season: 1, number: 1, providers: ["jikan", "kitsu"] });
+// ctx.anime    -> the full merged Anime
+// ctx.season   -> which Season it belongs to
+// ctx.episode  -> number/title/air date/thumbnails
+// ctx.skip     -> { op, ed, recap } from AniSkip by default (keyless); null when nothing is stored
+// ctx.images   -> stills/screenshots
+
+// Apply the branding offset for the service you actually watch on:
+await shogo.skipTimes("mal:21", { number: 1, serviceUrl: "https://www.crunchyroll.com/..." });</code></pre>
+      </div>
+      <p class="mt-3 text-sm text-slate-400">
+        <strong>Consolidation:</strong> flat lists and season 1 align on the episode number;
+        deeper TMDB seasons align via <code class="inline">(season, number)</code> or
+        <code class="inline">absoluteNumber</code>; episodes that match nothing are surfaced in
+        <code class="inline">consolidated.unmatched</code> — never dropped. Tagged TMDB with no
+        <code class="inline">{ season }</code> fetches every numbered season so a whole show can align.
+        Provider tags select <em>episode</em> sources only — the anime record still merges the
+        full metadata set.
+      </p>
+      <p class="mt-3 text-sm text-slate-400">
+        <strong>Skip times</strong> default to AniSkip (keyless; real ranges) with Anime Skip as an optional
+        fallback; tagging <code class="inline">anime-skip</code> without a key throws <code class="inline">MissingApiKeyError</code>
+        (it asks for it). A rejected client id throws <code class="inline">InvalidApiKeyError</code>
+        (<code class="inline">INVALID_KEY</code>) naming the fix, and the app validates the id inline in settings.
+        Missing pieces are reported as <code class="inline">no-key</code> / <code class="inline">no-anilist-id</code> / <code class="inline">no-mal-id</code> / <code class="inline">not-found</code>.
+        Pass <code class="inline">{ episodeLength }</code> (seconds) to pick the matching stored variant —
+        AniSkip keeps one per release length, and <code class="inline">episode()</code> passes the episode's
+        own duration automatically.
+      </p>
+    </section>
+
+    <section class="mt-12">
+      <h2 id="resilience" class="font-display text-2xl font-bold text-white">Resilience &amp; hooks</h2>
+      <ul class="mt-3 list-disc space-y-1.5 pl-5 text-sm text-slate-400">
+        <li><strong>Parallel by default:</strong> mapping sources and provider fan-out run concurrently — a lookup costs roughly the slowest provider, not the sum.</li>
+        <li><strong>Rate limits</strong> per provider with sane defaults (Jikan 3/s + 60/min, AniList 30/min, …), self-tuned from <code class="inline">X-RateLimit-*</code> headers.</li>
+        <li><strong>Timeouts are never retried</strong>, and a provider that fails goes on a <strong>60s cooldown</strong> (failure cache — <code class="inline">cache: "bypass"</code> re-probes; a success clears it). A per-provider <strong>circuit breaker</strong> backs this up.</li>
+        <li><strong>Cache</strong>: in-memory by default, ETag revalidation, negative caching, request <strong>coalescing</strong>; <code class="inline">cache: false</code> or any custom store.</li>
+        <li><strong>Observability</strong>: hooks, <code class="inline">result.meta</code>, <code class="inline">dryRun</code> plans, <code class="inline">stats()</code>.</li>
+      </ul>
+      <div data-code class="code mt-4 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
+        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>const shogo = new Shogo({
+  hooks: {
+    onRequest:  (e) =&gt; log.debug(e.provider, e.url),          // urls are redacted
+    onResponse: (e) =&gt; metrics.observe(e.provider, e.durationMs),
+    onError:    (e) =&gt; log.error(e.provider, e.error, e.willRetry),
+  },
+});
+
+await shogo.findById("mal:21", { dryRun: true });
+// { plan: [{ provider: "jikan", native: { kind: "mal", id: 21 } }, ...] }
+
+shogo.stats(); // http counters, cache hits, limiter waits, breaker states</code></pre>
+      </div>
+    </section>
+
+    <section class="mt-12">
+      <h2 id="runtime" class="font-display text-2xl font-bold text-white">Runtime support</h2>
+      <p class="mt-3 text-sm text-slate-400">
+        All network traffic goes through one replaceable function
+        (<code class="inline">new Shogo({ fetch })</code>); there are no
+        <code class="inline">node:</code> imports and no assumptions about
+        <code class="inline">URL</code>, timers or <code class="inline">AbortController</code>.
+      </p>
+      <div data-code class="code mt-4 overflow-hidden rounded-xl bg-ink-900 ring-1 ring-ink-700">
+        <pre class="overflow-x-auto p-4 font-mono text-[13px]"><code>// QuickJS-ng / React Native / anywhere without a global fetch:
+import { Shogo } from "shogo-anime";
+import { fetch } from "your-host-fetch-binding";
+
+const shogo = new Shogo({
+  fetch,
+  clock: { now: () =&gt; Date.now(), sleep: (ms) =&gt; hostSleep(ms) }, // only if timers are missing
+});</code></pre>
+      </div>
+      <p class="mt-3 text-sm text-slate-400">
+        Subpaths: <code class="inline">shogo-anime/ids</code> (pure, ~2 KB),
+        <code class="inline">shogo-anime/core</code>,
+        <code class="inline">shogo-anime/testing</code> (mock fetch for your own tests).
+        Browser CORS is verified open (<code class="inline">*</code>) for Kitsu, AniList,
+        animap.id, TMDB and Anime Skip; Jikan is browser-friendly too.
+      </p>
+      <p class="mt-3 text-sm text-slate-400">
+        <strong>Backend mode:</strong> <code class="inline">new Shogo({ proxy: "/api/proxy" })</code> routes
+        every provider call through your server (<code class="inline">shogo.transport === "backend"</code>),
+        so the browser only talks to your backend. The docs server implements a hardened proxy
+        (host allow-list, body/header forwarding, server-side
+        <code class="inline">TMDB_API_KEY</code> / <code class="inline">ANIME_SKIP_CLIENT_ID</code> injection);
+        the app and playground have a frontend/backend switch.
+      </p>
+    </section>
+
+    <section class="mt-12">
+      <h2 id="attribution" class="font-display text-2xl font-bold text-white">Attribution &amp; licenses</h2>
+      <p class="mt-3 text-sm text-slate-400">shogo ships no data — everything is fetched at runtime and stays subject to upstream terms:</p>
+      <ul class="mt-3 list-disc space-y-1.5 pl-5 text-sm text-slate-400">
+        <li><strong>MyAnimeList / Jikan</strong> — unofficial API; self-hosting supported via <code class="inline">baseUrls.jikan</code>.</li>
+        <li><strong>Kitsu</strong> and <strong>AniList</strong> — public APIs, rate limits apply.</li>
+        <li><strong>TMDB</strong> — “This product uses the TMDB API but is not endorsed or certified by TMDB.”</li>
+        <li><strong>animap.id</strong> — “anidump map data”; attribution rules on their site.</li>
+        <li><strong>AniDB</strong> (data can arrive indirectly via Kitsu/animap) — <strong>CC BY-NC-SA 4.0; non-commercial</strong>.</li>
+        <li><strong>AniSkip</strong> — keyless skip times (aniskip.com); credit it when displaying its ranges.</li>
+        <li><strong>Anime Skip</strong> — API client id required (optional fallback); respect its terms.</li>
+      </ul>
+      <p class="mt-6 text-sm text-slate-400">
+        Next: open the <a class="anchor" href="../examples/">live playground</a> or browse with the
+        <a class="anchor" href="../shogo/shogo.html">shogo app</a>.
+      </p>
+    </section>
+  </main>
+</div>
+
+<script>
+  lucide.createIcons();
+
+  // copy buttons for every code block
+  document.querySelectorAll("[data-code]").forEach((block) => {
+    const button = document.createElement("button");
+    button.className =
+      "absolute right-2 top-2 flex items-center gap-1.5 rounded-md bg-ink-800/90 px-2 py-1 text-xs text-slate-400 opacity-0 transition hover:text-white group-hover:opacity-100";
+    button.innerHTML = '<i data-lucide="copy" class="h-3.5 w-3.5"></i> copy';
+    block.classList.add("relative", "group");
+    block.appendChild(button);
+    button.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(block.querySelector("pre").innerText);
+        button.innerHTML = '<i data-lucide="check" class="h-3.5 w-3.5 text-emerald-400"></i> copied';
+      } catch (err) {
+        button.textContent = "copy failed";
+      }
+      lucide.createIcons();
+      setTimeout(() => {
+        button.innerHTML = '<i data-lucide="copy" class="h-3.5 w-3.5"></i> copy';
+        lucide.createIcons();
+      }, 1500);
+    });
+  });
+
+  // scrollspy
+  const toc = Array.from(document.querySelectorAll("#toc .toc"));
+  const sections = toc
+    .map((a) => document.querySelector(a.getAttribute("href")))
+    .filter(Boolean);
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        toc.forEach((a) => {
+          const active = a.getAttribute("href") === "#" + entry.target.id;
+          a.classList.toggle("bg-ink-800", active);
+          a.classList.toggle("text-white", active);
+          a.classList.toggle("text-slate-400", !active);
+        });
+      }
+    },
+    { rootMargin: "-20% 0px -70% 0px" }
+  );
+  sections.forEach((section) => observer.observe(section));
+</script>
+</body>
+</html>

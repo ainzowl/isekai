@@ -1,0 +1,74 @@
+{
+  "name": "shogo-anime",
+  "version": "0.1.0",
+  "description": "One clean interface over every anime service — metadata, IDs, images, seasons, episodes and skip times from Jikan, Kitsu, AniList, animap.id, TMDB, AniSkip and Anime Skip. Zero dependencies.",
+  "keywords": [
+    "anime",
+    "anilist",
+    "myanimelist",
+    "jikan",
+    "kitsu",
+    "animap",
+    "aniskip",
+    "anime-skip",
+    "skip-times",
+    "tmdb",
+    "imdb",
+    "metadata",
+    "api"
+  ],
+  "author": "ainzoal",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "main": "./src/index.js",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./core": {
+      "types": "./types/index.d.ts",
+      "default": "./src/core/index.js"
+    },
+    "./ids": {
+      "types": "./types/index.d.ts",
+      "default": "./src/core/ids.js"
+    },
+    "./providers/*": {
+      "types": "./types/index.d.ts",
+      "default": "./src/providers/*.js"
+    },
+    "./testing": {
+      "types": "./types/index.d.ts",
+      "default": "./src/testing.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "types",
+    "README.md",
+    "AGENTS.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "test:live": "sh -c \"SHOGO_LIVE=1 node --test test/*.test.js\"",
+    "lint": "node scripts/lint.mjs",
+    "docs": "node docs/serve.mjs"
+  },
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ainzowl/shogo.git"
+  },
+  "homepage": "https://github.com/ainzowl/shogo",
+  "bugs": {
+    "url": "https://github.com/ainzowl/shogo/issues"
+  }
+}
